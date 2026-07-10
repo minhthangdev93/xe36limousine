@@ -1,0 +1,72 @@
+/**
+ * Bridge iOS 16 tokens into Elementor/OceanWP UI.
+ */
+
+.elementor-button,
+.elementor-button:visited {
+	background-color: var(--xe36-primary);
+	color: #fff;
+	border-radius: var(--xe36-radius-button);
+	font-family: var(--xe36-font-body);
+	font-weight: var(--xe36-text-button-weight);
+	text-transform: none;
+	letter-spacing: -0.41px;
+	transition: background-color var(--xe36-transition), opacity var(--xe36-transition);
+}
+
+.elementor-button:hover,
+.elementor-button:focus {
+	background-color: var(--xe36-primary-dark);
+	color: #fff;
+	opacity: 0.92;
+}
+
+.elementor-widget-heading .elementor-heading-title {
+	font-family: var(--xe36-font-display);
+	color: inherit;
+}
+
+.site-content a:not(.btn):not(.elementor-button):not(.giuseart-nav a) {
+	color: var(--xe36-primary);
+	transition: opacity var(--xe36-transition);
+}
+
+.site-content a:not(.btn):not(.elementor-button):not(.giuseart-nav a):hover {
+	opacity: 0.7;
+}
+
+.elementor-section[style*="107EB9"],
+.elementor-section[style*="107eb9"],
+.elementor-section[style*="007AFF"],
+.elementor-section[style*="007aff"] {
+	background-color: var(--xe36-primary) !important;
+}
+
+.elementor-section[style*="0068FF"],
+.elementor-section[style*="0068ff"] {
+	background-color: var(--xe36-secondary) !important;
+}
+
+/* Dark footer — iOS */
+#footer,
+#footer-bottom {
+	background-color: var(--xe36-bg-dark) !important;
+	color: var(--xe36-text-on-dark) !important;
+	border-color: var(--xe36-border-ghost-dark) !important;
+}
+
+#footer a,
+#footer-bottom a,
+#footer .footer-menu a {
+	color: var(--xe36-primary-light) !important;
+}
+
+#footer a:hover,
+#footer-bottom a:hover {
+	color: #fff !important;
+}
+
+#footer .widget-title,
+#footer-bottom .footer-bar {
+	color: var(--xe36-text-on-dark) !important;
+}

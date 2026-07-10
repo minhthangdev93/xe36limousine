@@ -1,0 +1,192 @@
+.xe36-ui-preview {
+	background: var(--xe36-bg);
+	color: var(--xe36-text);
+	font-family: var(--xe36-font-body);
+	padding: 0 0 calc(var(--xe36-space-unit) * 8);
+}
+
+.xe36-ui-preview__hero {
+	padding: calc(var(--xe36-space-unit) * 6) 0;
+	margin-bottom: calc(var(--xe36-space-unit) * 4);
+}
+
+.xe36-ui-preview__hero p {
+	max-width: 52ch;
+	margin: calc(var(--xe36-space-unit) * 2) 0 0;
+	color: var(--xe36-muted);
+}
+
+.xe36-ui-preview__section {
+	margin-bottom: calc(var(--xe36-space-unit) * 6);
+}
+
+.xe36-ui-preview__section-title {
+	margin: 0 0 calc(var(--xe36-space-unit) * 0.5);
+	font-family: var(--xe36-font-display);
+	font-size: var(--xe36-text-headline-sm-size);
+	font-weight: var(--xe36-text-headline-sm-weight);
+	color: var(--xe36-text);
+}
+
+.xe36-ui-preview__section-desc {
+	margin: 0 0 calc(var(--xe36-space-unit) * 3);
+	color: var(--xe36-muted);
+	font-size: var(--xe36-text-body-sm-size);
+}
+
+.xe36-ui-preview__grid {
+	display: grid;
+	gap: calc(var(--xe36-space-unit) * 2);
+}
+
+.xe36-ui-preview__grid--colors {
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.xe36-ui-preview__grid--type {
+	grid-template-columns: 1fr;
+	gap: calc(var(--xe36-space-unit) * 3);
+}
+
+.xe36-ui-preview__grid--buttons {
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	align-items: start;
+}
+
+.xe36-ui-preview__grid--inputs {
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.xe36-ui-preview__grid--elevation {
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.xe36-ui-preview__swatch {
+	overflow: hidden;
+	border: 1px solid var(--xe36-border);
+	border-radius: var(--xe36-radius);
+	background: var(--xe36-bg);
+}
+
+.xe36-ui-preview__swatch-color {
+	height: 72px;
+}
+
+.xe36-ui-preview__swatch-meta {
+	padding: calc(var(--xe36-space-unit) * 1.25);
+}
+
+.xe36-ui-preview__swatch-name {
+	display: block;
+	font-family: var(--xe36-font-body);
+	font-size: var(--xe36-text-body-sm-size);
+	font-weight: 600;
+	color: var(--xe36-text);
+}
+
+.xe36-ui-preview__swatch-value {
+	display: block;
+	margin-top: 2px;
+	font-family: monospace;
+	font-size: 11px;
+	color: var(--xe36-muted);
+}
+
+.xe36-ui-preview__type-row {
+	padding: calc(var(--xe36-space-unit) * 2);
+	border: 1px solid var(--xe36-border);
+	border-radius: var(--xe36-radius);
+	background: var(--xe36-bg);
+}
+
+.xe36-ui-preview__type-label {
+	margin-bottom: calc(var(--xe36-space-unit) * 1.25);
+}
+
+.xe36-ui-preview__button-stack {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--xe36-space-unit) * 1.5);
+}
+
+.xe36-ui-preview__field label {
+	display: block;
+	margin-bottom: calc(var(--xe36-space-unit) * 0.75);
+}
+
+.xe36-ui-preview__chip-row,
+.xe36-ui-preview__link-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--xe36-space-unit) * 1.5);
+	align-items: center;
+}
+
+.xe36-ui-preview__surface {
+	padding: calc(var(--xe36-space-unit) * 3);
+	border-radius: var(--xe36-radius);
+	border: 1px solid var(--xe36-border-ghost);
+}
+
+.xe36-ui-preview__surface--l0 {
+	background: var(--xe36-bg);
+}
+
+.xe36-ui-preview__surface--l1 {
+	background: var(--xe36-bg-soft);
+}
+
+.xe36-ui-preview__surface--l2 {
+	background: var(--xe36-bg-elevated);
+	box-shadow: var(--xe36-shadow-float);
+}
+
+.xe36-ui-preview__surface--dark {
+	background: var(--xe36-bg-dark);
+	color: var(--xe36-text-on-dark);
+}
+
+.xe36-ui-preview__booking-mock {
+	display: grid;
+	gap: calc(var(--xe36-space-unit) * 3);
+}
+
+.xe36-ui-preview__booking-mock-header {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: calc(var(--xe36-space-unit) * 2);
+	align-items: flex-start;
+}
+
+.xe36-ui-preview__booking-price {
+	font-family: var(--xe36-font-display);
+	font-size: var(--xe36-text-headline-md-size);
+	font-weight: 700;
+	color: var(--xe36-primary-light);
+}
+
+.xe36-ui-preview__booking-specs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--xe36-space-unit) * 1);
+}
+
+.xe36-ui-preview__spacing-bar {
+	height: var(--xe36-space-unit);
+	border-radius: var(--xe36-radius-xs);
+	background: var(--xe36-primary);
+}
+
+.xe36-ui-preview__spacing-row {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--xe36-space-unit) * 2);
+	margin-bottom: calc(var(--xe36-space-unit) * 1.5);
+	font-size: var(--xe36-text-body-sm-size);
+	color: var(--xe36-muted);
+}
+
+.xe36-ui-preview__spacing-row span:last-child {
+	font-family: monospace;
+}

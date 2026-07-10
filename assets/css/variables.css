@@ -1,0 +1,115 @@
+/**
+ * Design tokens — iOS 16 UI Kit language.
+ * Source: Figma iOS 16 UI Kit (community) + Apple HIG system colors.
+ */
+:root {
+	/* System colors (iOS) */
+	--xe36-primary: #007aff;
+	--xe36-primary-light: #5ac8fa;
+	--xe36-primary-dark: #0051a8;
+	--xe36-primary-container: #007aff;
+	--xe36-secondary: #007aff;
+	--xe36-secondary-light: #64d2ff;
+	--xe36-secondary-container: #007aff;
+	--xe36-accent: #ff9500;
+	--xe36-accent-container: #ff9f0a;
+	--xe36-status-alert: #ff9500;
+	--xe36-system-green: #34c759;
+	--xe36-system-green-dark: #30b350;
+	--xe36-system-indigo: #5856d6;
+	--xe36-system-teal: #5ac8fa;
+	--xe36-platinum-gray: #f2f2f7;
+	--xe36-deep-navy: #1c1c1e;
+
+	/* Light content (default) */
+	--xe36-bg: #ffffff;
+	--xe36-bg-soft: #f2f2f7;
+	--xe36-bg-elevated: #ffffff;
+	--xe36-text: #000000;
+	--xe36-muted: rgba(60, 60, 67, 0.6);
+	--xe36-label: rgba(60, 60, 67, 0.6);
+	--xe36-border: #c6c6c8;
+	--xe36-border-ghost: rgba(60, 60, 67, 0.29);
+	--xe36-border-soft: rgba(60, 60, 67, 0.18);
+	--xe36-border-focus: var(--xe36-primary);
+
+	/* Dark surfaces (hero, footer, CTA band) */
+	--xe36-bg-dark: #000000;
+	--xe36-bg-dark-soft: #1c1c1e;
+	--xe36-bg-dark-elevated: #2c2c2e;
+	--xe36-text-on-dark: #ffffff;
+	--xe36-muted-on-dark: rgba(235, 235, 245, 0.6);
+	--xe36-border-ghost-dark: rgba(84, 84, 88, 0.65);
+	--xe36-border-soft-dark: rgba(84, 84, 88, 0.45);
+
+	/* Legacy aliases */
+	--xe36-header: var(--xe36-primary);
+	--xe36-surface-black: var(--xe36-bg-dark);
+	--xe36-on-surface: var(--xe36-text-on-dark);
+	--xe36-on-surface-variant: var(--xe36-muted-on-dark);
+
+	/* Semantic */
+	--xe36-success: #34c759;
+	--xe36-danger: #ff3b30;
+	--xe36-error: #ff3b30;
+
+	/* Layout & spacing — 8pt grid */
+	--xe36-space-unit: 8px;
+	--xe36-container-max: 1280px;
+	--xe36-gutter: 24px;
+	--xe36-margin-mobile: 16px;
+	--xe36-margin-desktop: 48px;
+
+	/* Radius — iOS continuous / control */
+	--xe36-radius-xs: 6px;
+	--xe36-radius-sm: 10px;
+	--xe36-radius-md: 12px;
+	--xe36-radius: 12px;
+	--xe36-radius-button: 980px;
+	--xe36-radius-xl: 16px;
+	--xe36-radius-pill: 980px;
+
+	/* Depth — soft iOS */
+	--xe36-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	--xe36-shadow-float: 0 4px 16px rgba(0, 0, 0, 0.1);
+	--xe36-glow-primary: 0 0 0 3px rgba(0, 122, 255, 0.28);
+	--xe36-glow-hover: 0 0 0 3px rgba(0, 122, 255, 0.16);
+
+	/* Typography — SF Pro system stack */
+	--xe36-font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--xe36-font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+	/* Typography scale ≈ iOS Large Title / Title / Body / Footnote */
+	--xe36-text-display-lg-size: 34px;
+	--xe36-text-display-lg-lh: 41px;
+	--xe36-text-display-lg-weight: 700;
+	--xe36-text-display-lg-tracking: 0.37px;
+	--xe36-text-display-lg-mobile-size: 28px;
+	--xe36-text-display-lg-mobile-lh: 34px;
+	--xe36-text-headline-md-size: 22px;
+	--xe36-text-headline-md-lh: 28px;
+	--xe36-text-headline-md-weight: 700;
+	--xe36-text-headline-sm-size: 17px;
+	--xe36-text-headline-sm-lh: 22px;
+	--xe36-text-headline-sm-weight: 600;
+	--xe36-text-body-lg-size: 17px;
+	--xe36-text-body-lg-lh: 22px;
+	--xe36-text-body-md-size: 17px;
+	--xe36-text-body-md-lh: 22px;
+	--xe36-text-body-sm-size: 15px;
+	--xe36-text-body-sm-lh: 20px;
+	--xe36-text-label-caps-size: 13px;
+	--xe36-text-label-caps-lh: 18px;
+	--xe36-text-label-caps-weight: 400;
+	--xe36-text-label-caps-tracking: -0.08px;
+	--xe36-text-button-size: 17px;
+	--xe36-text-button-lh: 22px;
+	--xe36-text-button-weight: 600;
+	--xe36-transition: 200ms ease;
+
+	/* Elementor global color bridge */
+	--e-global-color-primary: var(--xe36-primary);
+	--e-global-color-secondary: var(--xe36-secondary);
+	--e-global-color-text: var(--xe36-text);
+	--e-global-color-accent: var(--xe36-accent);
+}

@@ -1,0 +1,36 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# Logs / caches
+*.log
+npm-debug.log*
+.cache/
+tmp/
+temp/
+
+# Dependencies (if added later)
+node_modules/
+vendor/
+composer.lock
+
+# Local / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# WordPress local noise (if ever nested)
+uploads/
+cache/
+backup*/
+*.sql
+*.sql.gz

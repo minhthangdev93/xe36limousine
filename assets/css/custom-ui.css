@@ -1,0 +1,81 @@
+/**
+ * Custom UI shell — layout isolation from OceanWP parent theme.
+ *
+ * Scope: body.xe36-custom-ui only.
+ * Goal: full-bleed sections; parent padding/container/sidebar do not leak in.
+ */
+
+body.xe36-custom-ui #main {
+	overflow-x: hidden;
+}
+
+/* Kill OceanWP content-wrap padding (50px) and container max-width */
+body.xe36-custom-ui #main #content-wrap,
+body.xe36-custom-ui #main #content-wrap.xe36-shell,
+body.xe36-custom-ui #main #content-wrap.xe36-homepage,
+body.xe36-custom-ui #main #content-wrap.container {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* No sidebar column / content-area borders */
+body.xe36-custom-ui #primary,
+body.xe36-custom-ui .content-area,
+body.xe36-custom-ui .xe36-shell__primary {
+	float: none !important;
+	width: 100% !important;
+	max-width: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+}
+
+body.xe36-custom-ui #content,
+body.xe36-custom-ui .site-content,
+body.xe36-custom-ui .xe36-shell__content {
+	width: 100% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* Hide leftover OceanWP page header if filter missed */
+body.xe36-custom-ui .page-header,
+body.xe36-custom-ui .ocean-single-post-header,
+body.xe36-custom-ui .single-post-header-wrap {
+	display: none !important;
+}
+
+/* Hide sidebar widgets if layout filter missed */
+body.xe36-custom-ui #right-sidebar,
+body.xe36-custom-ui #left-sidebar,
+body.xe36-custom-ui .widget-area {
+	display: none !important;
+}
+
+/* Shell root — full bleed */
+body.xe36-custom-ui .xe36-shell {
+	display: block;
+	width: 100%;
+	max-width: none;
+	background: var(--xe36-bg);
+	color: var(--xe36-text);
+	font-family: var(--xe36-font-body);
+}
+
+/* Kill leftover OceanWP #main / #outer-wrap horizontal padding */
+body.xe36-custom-ui #main,
+body.xe36-custom-ui #outer-wrap,
+body.xe36-custom-ui #wrap {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	max-width: none !important;
+}
+
+body.xe36-custom-ui .home-section.home-hero {
+	width: 100% !important;
+	max-width: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}

@@ -1,0 +1,108 @@
+/**
+ * [vanphong_xe36] — office locations.
+ * Mobile: horizontal swipe. Desktop: 2 columns.
+ */
+
+.vanphong-list {
+	display: flex;
+	gap: calc(var(--xe36-space-unit) * 1.5);
+	margin: 0;
+	padding: 0 0 calc(var(--xe36-space-unit) * 0.5);
+	list-style: none;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scroll-snap-type: x mandatory;
+	scroll-padding-inline: var(--xe36-margin-mobile, 16px);
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	overscroll-behavior-x: contain;
+	line-height: var(--xe36-text-body-md-lh);
+	font-family: var(--xe36-font-body);
+	color: var(--xe36-text);
+}
+
+.vanphong-list::-webkit-scrollbar {
+	display: none;
+}
+
+.vanphong-item {
+	flex: 0 0 min(85%, 20.5rem);
+	width: min(85%, 20.5rem);
+	min-height: 100%;
+	margin: 0;
+	padding: calc(var(--xe36-space-unit) * 2);
+	box-sizing: border-box;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	border: 1px solid rgba(0, 122, 255, 0.12);
+	border-radius: var(--xe36-radius, 12px);
+	background-color: #fff;
+	box-shadow: 0 8px 28px rgba(0, 48, 96, 0.06);
+}
+
+.vanphong-item h3 {
+	margin: 0 0 calc(var(--xe36-space-unit) * 1.25);
+	font-family: var(--xe36-font-display);
+	font-size: 1.3rem;
+	font-weight: var(--xe36-text-headline-sm-weight, 700);
+	line-height: 1.3;
+	color: var(--xe36-primary, #007aff);
+}
+
+.vanphong-item p {
+	margin: 0 0 calc(var(--xe36-space-unit) * 1);
+	font-size: 1.1rem;
+	line-height: 1.55;
+}
+
+.vanphong-item p:last-child {
+	margin-bottom: 0;
+}
+
+.vanphong-item ul {
+	margin: 0;
+	padding-left: calc(var(--xe36-space-unit) * 2.25);
+}
+
+.vanphong-item li {
+	margin-bottom: calc(var(--xe36-space-unit) * 0.85);
+	font-size: 1.1rem;
+	line-height: 1.5;
+}
+
+.vanphong-item li:last-child {
+	margin-bottom: 0;
+}
+
+.vanphong-item a {
+	color: var(--xe36-primary, #007aff);
+	text-decoration: none;
+	font-weight: 600;
+	transition: color var(--xe36-transition, 0.2s ease);
+}
+
+.vanphong-item a:hover,
+.vanphong-item a:focus-visible {
+	color: var(--xe36-accent, #ff9500);
+	text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+	.vanphong-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: calc(var(--xe36-space-unit) * 2);
+		overflow: visible;
+		scroll-snap-type: none;
+		scroll-padding-inline: 0;
+		padding-bottom: 0;
+	}
+
+	.vanphong-item {
+		flex: unset;
+		width: auto;
+		min-height: 0;
+		scroll-snap-align: unset;
+		scroll-snap-stop: unset;
+	}
+}

@@ -1,0 +1,144 @@
+/* [readmore] — smooth collapse / expand */
+
+.readmore-wrapper {
+	width: 100%;
+}
+
+.readmore-panel {
+	position: relative;
+	overflow: hidden;
+	max-height: 320px;
+	transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.readmore-panel.is-expanded {
+	max-height: none;
+}
+
+.readmore-body {
+	text-align: justify;
+	text-justify: inter-word;
+	hyphens: auto;
+	color: rgba(60, 60, 67, 0.85);
+	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+	line-height: 1.65;
+}
+
+@media (min-width: 960px) {
+	.readmore-body {
+		font-size: 1.5rem;
+		line-height: 1.7;
+	}
+}
+
+.readmore-body > *:first-child {
+	margin-top: 0;
+}
+
+.readmore-body > *:last-child {
+	margin-bottom: 0;
+}
+
+.readmore-body h1,
+.readmore-body h2,
+.readmore-body h3,
+.readmore-body h4 {
+	text-align: left;
+	color: var(--xe36-text, #000);
+	font-family: var(--xe36-font-display, inherit);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.3;
+	margin: 1.6em 0 0.65em;
+}
+
+.readmore-body h1 {
+	font-size: clamp(1.5rem, 2.4vw, 1.85rem);
+}
+
+.readmore-body h2 {
+	font-size: clamp(1.3rem, 2.1vw, 1.55rem);
+}
+
+.readmore-body h3 {
+	font-size: clamp(1.15rem, 1.8vw, 1.3rem);
+}
+
+.readmore-body p {
+	margin: 0 0 1em;
+}
+
+.readmore-body ul,
+.readmore-body ol {
+	margin: 0 0 1em;
+	padding-left: 1.25em;
+	text-align: left;
+}
+
+.readmore-body li {
+	margin: 0 0 0.4em;
+}
+
+.readmore-body li:last-child {
+	margin-bottom: 0;
+}
+
+.readmore-body a {
+	color: var(--xe36-primary, #007aff);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.readmore-body img,
+.readmore-body figure {
+	max-width: 100%;
+	height: auto;
+}
+
+.readmore-fade {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 5.5rem;
+	pointer-events: none;
+	background: linear-gradient(180deg, rgba(237, 253, 250, 0) 0%, #edfdfa 88%);
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+
+.readmore-wrapper.is-open .readmore-fade {
+	opacity: 0;
+}
+
+.readmore-actions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin-top: calc(var(--xe36-space-unit, 8px) * 2.5);
+	text-align: center;
+}
+
+.readmore-actions:has(.readmore-btn[hidden]) {
+	display: none;
+}
+
+.readmore-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	min-height: 2.75rem;
+	padding: 0.65rem 1.75rem;
+	font-size: 1rem;
+}
+
+.readmore-btn[hidden] {
+	display: none !important;
+}
+
+/* White section surfaces (if used outside mint band) */
+.home-section:not(.home-content) .readmore-fade {
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 88%);
+}
