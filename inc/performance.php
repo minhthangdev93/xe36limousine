@@ -117,7 +117,7 @@ function xe36_homepage_hero_image_id() {
 }
 
 /**
- * Preload LCP hero image on homepage.
+ * Preload LCP hero — smaller file for mobile, larger for desktop.
  */
 function xe36_performance_preload_hero() {
 	if ( ! is_front_page() ) {
@@ -129,24 +129,95 @@ function xe36_performance_preload_hero() {
 		return;
 	}
 
-	$src = wp_get_attachment_image_url( $id, 'large' );
-	if ( ! $src ) {
-		$src = wp_get_attachment_image_url( $id, 'full' );
+	$mobile = wp_get_attachment_image_src( $id, 'medium_large' );
+	if ( ! is_array( $mobile ) || empty( $mobile[0] ) ) {
+		$mobile = wp_get_attachment_image_src( $id, 'large' );
 	}
-	if ( ! $src ) {
-		return;
+	$desktop = wp_get_attachment_image_src( $id, 'large' );
+	if ( ! is_array( $desktop ) || empty( $desktop[0] ) ) {
+		$desktop = wp_get_attachment_image_src( $id, 'full' );
 	}
 
-	$srcset = wp_get_attachment_image_srcset( $id, 'large' );
-	$sizes  = '100vw';
-
-	echo '<link rel="preload" as="image" href="' . esc_url( $src ) . '"';
-	if ( $srcset ) {
-		echo ' imagesrcset="' . esc_attr( $srcset ) . '" imagesizes="' . esc_attr( $sizes ) . '"';
+	if ( is_array( $mobile ) && ! empty( $mobile[0] ) ) {
+		echo '<link rel="preload" as="image" href="' . esc_url( $mobile[0] ) . '" media="(max-width: 768px)" fetchpriority="high">' . "\n";
 	}
-	echo ' fetchpriority="high">' . "\n";
+	if ( is_array( $desktop ) && ! empty( $desktop[0] ) ) {
+		$srcset = wp_get_attachment_image_srcset( $id, 'large' );
+		echo '<link rel="preload" as="image" href="' . esc_url( $desktop[0] ) . '" media="(min-width: 769px)"';
+		if ( $srcset ) {
+			echo ' imagesrcset="' . esc_attr( $srcset ) . '" imagesizes="100vw"';
+		}
+		echo ' fetchpriority="high">' . "\n";
+	}
 }
 add_action( 'wp_head', 'xe36_performance_preload_hero', 2 );
+
+/**
+ * Load non-critical CSS without blocking first paint (mobile FCP).
+ *
+ * @param string $html   Link tag.
+ * @param string $handle Style handle.
+ * @return string
+ */
+function xe36_performance_async_styles( $html, $handle ) {
+	$async = array(
+		'xe36-homepage',
+		'xe36-footer',
+		'xe36-floating-bar',
+		'xe36-booking',
+		'xe36-readmore',
+		'xe36-vanphong',
+	);
+
+	if ( ! in_array( $handle, $async, true ) || false !== strpos( $html, 'onload=' ) ) {
+		return $html;
+	}
+
+	$async_html = preg_replace(
+		'/\smedia=(["\'])all\1/i',
+		' media="print" onload="this.media=\'all\'"',
+		$html,
+		1
+	);
+
+	if ( $async_html === $html ) {
+		$async_html = str_replace( '/>', ' media="print" onload="this.media=\'all\'" />', $html );
+	}
+
+	$noscript = preg_replace( '/\smedia="print" onload="this\.media=\'all\'"/', '', $async_html );
+	return $async_html . '<noscript>' . $noscript . '</noscript>';
+}
+add_filter( 'style_loader_tag', 'xe36_performance_async_styles', 10, 2 );
+
+/**
+ * Strip emoji / embed / unused block CSS on custom UI (mobile main-thread).
+ */
+function xe36_performance_disable_emoji() {
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+	remove_action( 'wp_print_styles', 'print_emoji_styles' );
+	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+	remove_action( 'admin_print_styles', 'print_emoji_styles' );
+	remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+	remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+	remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+}
+add_action( 'init', 'xe36_performance_disable_emoji', 20 );
+
+/**
+ * Dequeue bloat assets on front-end custom UI pages.
+ */
+function xe36_performance_dequeue_bloat() {
+	wp_deregister_script( 'wp-embed' );
+
+	if ( function_exists( 'xe36_is_custom_ui' ) && xe36_is_custom_ui() ) {
+		wp_dequeue_style( 'wp-block-library' );
+		wp_dequeue_style( 'wp-block-library-theme' );
+		wp_dequeue_style( 'wc-blocks-style' );
+		wp_dequeue_style( 'classic-theme-styles' );
+		wp_dequeue_style( 'global-styles' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'xe36_performance_dequeue_bloat', 100 );
 
 /**
  * Resource hints for third parties loaded after idle.

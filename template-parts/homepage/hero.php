@@ -104,7 +104,7 @@ $has_cta    = ( $cta1_text && $cta1_url ) || ( $cta2_text && $cta2_url ) || ( $c
 						'alt'           => '',
 						'decoding'      => 'async',
 						'fetchpriority' => 'high',
-						'sizes'         => '100vw',
+						'sizes'         => '(max-width: 768px) 100vw, 1400px',
 					)
 				);
 			} else {

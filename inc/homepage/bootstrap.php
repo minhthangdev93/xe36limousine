@@ -56,10 +56,19 @@ function xe36_enqueue_homepage_assets() {
 	$version  = xe36_theme_version();
 	$sections = xe36_get_homepage_sections();
 
+	// Critical (hero) — render-blocking, small.
+	wp_enqueue_style(
+		'xe36-homepage-critical',
+		xe36_theme_uri( 'assets/css/homepage-critical.css' ),
+		array( 'xe36-variables', 'xe36-components', 'xe36-custom-ui' ),
+		$version
+	);
+
+	// Full homepage CSS — loaded async (see performance.php).
 	wp_enqueue_style(
 		'xe36-homepage',
 		xe36_theme_uri( 'assets/css/homepage.css' ),
-		array( 'xe36-variables', 'xe36-components', 'xe36-custom-ui' ),
+		array( 'xe36-homepage-critical' ),
 		$version
 	);
 

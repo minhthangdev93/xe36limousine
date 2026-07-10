@@ -122,6 +122,7 @@ function xe36_schema_business_profile() {
 			'streetAddress'   => 'Ki ốt 10, Chung cư N5 - KĐT Đồng Tàu',
 			'addressLocality' => 'Hoàng Mai',
 			'addressRegion'   => 'Hà Nội',
+			'postalCode'      => '10000',
 			'addressCountry'  => 'VN',
 		),
 		'address_text'   => $depot,
@@ -167,7 +168,7 @@ function xe36_schema_sync_rank_math_titles( $settings ) {
 		'streetAddress'   => $p['address']['streetAddress'],
 		'addressLocality' => $p['address']['addressLocality'],
 		'addressRegion'   => $p['address']['addressRegion'],
-		'postalCode'      => '',
+		'postalCode'      => $p['address']['postalCode'] ?? '10000',
 		'addressCountry'  => 'VN',
 	);
 
@@ -281,7 +282,8 @@ function xe36_schema_contact_points( array $profile ) {
 }
 
 /**
- * Branch offices as department Place entities.
+ * Branch offices as department Organization entities.
+ * (Schema.org: Organization.department expects Organization, not Place.)
  *
  * @param array $profile Business profile.
  * @return array<int, array<string, mixed>>
@@ -290,25 +292,31 @@ function xe36_schema_departments( array $profile ) {
 	$deps = array();
 	foreach ( (array) $profile['hn_offices'] as $addr ) {
 		$deps[] = array(
-			'@type'   => 'Place',
-			'name'    => 'Văn phòng Hà Nội',
+			'@type'   => 'Organization',
+			'name'    => 'Văn phòng Hà Nội — Xe 36 Limousine',
+			'parentOrganization' => array( '@id' => home_url( '/#organization' ) ),
 			'address' => array(
-				'@type'          => 'PostalAddress',
-				'streetAddress'  => $addr,
-				'addressRegion'  => 'Hà Nội',
-				'addressCountry' => 'VN',
+				'@type'           => 'PostalAddress',
+				'streetAddress'   => $addr,
+				'addressLocality' => 'Hà Nội',
+				'addressRegion'   => 'Hà Nội',
+				'postalCode'      => '10000',
+				'addressCountry'  => 'VN',
 			),
 		);
 	}
 	foreach ( (array) $profile['th_offices'] as $addr ) {
 		$deps[] = array(
-			'@type'   => 'Place',
-			'name'    => 'Văn phòng Thanh Hóa',
+			'@type'   => 'Organization',
+			'name'    => 'Văn phòng Thanh Hóa — Xe 36 Limousine',
+			'parentOrganization' => array( '@id' => home_url( '/#organization' ) ),
 			'address' => array(
-				'@type'          => 'PostalAddress',
-				'streetAddress'  => $addr,
-				'addressRegion'  => 'Thanh Hóa',
-				'addressCountry' => 'VN',
+				'@type'           => 'PostalAddress',
+				'streetAddress'   => $addr,
+				'addressLocality' => 'Thanh Hóa',
+				'addressRegion'   => 'Thanh Hóa',
+				'postalCode'      => '40000',
+				'addressCountry'  => 'VN',
 			),
 		);
 	}
