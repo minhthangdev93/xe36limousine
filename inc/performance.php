@@ -163,7 +163,6 @@ function xe36_performance_async_styles( $html, $handle ) {
 	$async = array(
 		'xe36-homepage',
 		'xe36-footer',
-		'xe36-floating-bar',
 		'xe36-booking',
 		'xe36-readmore',
 		'xe36-vanphong',

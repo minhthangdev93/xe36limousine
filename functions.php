@@ -16,7 +16,6 @@ xe36_require_inc( 'booking/ajax.php' );
 xe36_require_inc( 'booking/shortcode.php' );
 xe36_require_inc( 'shortcodes/vanphong.php' );
 xe36_require_inc( 'shortcodes/readmore.php' );
-xe36_require_inc( 'floating-bar.php' );
 xe36_require_inc( 'header/bootstrap.php' );
 xe36_require_inc( 'footer/bootstrap.php' );
 xe36_require_inc( 'custom-ui/bootstrap.php' );

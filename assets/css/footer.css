@@ -191,12 +191,6 @@
 	border-top: 1px solid rgba(84, 84, 88, 0.45);
 }
 
-@media (max-width: 767px) {
-	.xe36-footer__bottom {
-		padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
-	}
-}
-
 .xe36-footer__copy {
 	margin: 0;
 	font-size: 1rem;
