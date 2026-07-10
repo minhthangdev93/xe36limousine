@@ -17,7 +17,10 @@ $hotline_tel = is_string( $hotline_raw ) && '' !== preg_replace( '/\D+/', '', $h
 	: 'tel:1900888999';
 
 $logo_id  = (int) get_theme_mod( 'custom_logo' );
-$logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+$logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'medium' ) : '';
+if ( ! $logo_url && $logo_id ) {
+	$logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
+}
 if ( ! $logo_url ) {
 	$logo_url = 'https://xe36limousine.vn/wp-content/uploads/2022/12/logo-xe-36-travel.png';
 }
@@ -36,6 +39,7 @@ $has_menu = has_nav_menu( 'main_menu' );
 					width="160"
 					height="48"
 					decoding="async"
+					fetchpriority="low"
 				/>
 			</a>
 

@@ -5,14 +5,39 @@
 		return String(n).padStart(2, '0');
 	}
 
-	function todayISO() {
-		var d = new Date();
+	function toISODate(d) {
 		return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+	}
+
+	function todayISO() {
+		return toISODate(new Date());
+	}
+
+	function addDaysISO(iso, days) {
+		var parts = String(iso || '').split('-');
+		var d = new Date(
+			Number(parts[0]),
+			Number(parts[1]) - 1,
+			Number(parts[2]) || 1
+		);
+		d.setDate(d.getDate() + days);
+		return toISODate(d);
 	}
 
 	function nowHHMM() {
 		var d = new Date();
 		return pad(d.getHours()) + ':' + pad(d.getMinutes());
+	}
+
+	/**
+	 * After last trip (20:00), default booking date is tomorrow.
+	 */
+	function defaultTravelDate() {
+		var d = new Date();
+		if (d.getHours() >= 20) {
+			d.setDate(d.getDate() + 1);
+		}
+		return toISODate(d);
 	}
 
 	function rebuildHours($time, selectedDate) {
@@ -32,6 +57,31 @@
 
 		if (!added) {
 			$time.append(new Option('—', ''));
+			return false;
+		}
+
+		// Earliest remaining trip.
+		$time.prop('selectedIndex', 0);
+		return true;
+	}
+
+	/**
+	 * Ensure date/time are bookable (bump past last trip of the day).
+	 */
+	function syncTravelDateTime($date, $time) {
+		var minDate = defaultTravelDate();
+		var val = $date.val() || minDate;
+
+		if (val < minDate) {
+			val = minDate;
+		}
+
+		$date.attr('min', minDate).val(val);
+
+		if (!rebuildHours($time, val) && val === todayISO()) {
+			val = addDaysISO(todayISO(), 1);
+			$date.attr('min', val).val(val);
+			rebuildHours($time, val);
 		}
 	}
 
@@ -266,14 +316,12 @@
 		var $response = $('#response');
 		var $submit = $form.find('button[type="submit"]');
 		var submitLabel = $submit.data('submit-label') || $submit.text();
-		var today = todayISO();
 		var $combo = $form.find('[data-country-combobox]');
 
 		$route.val('hn-th');
 		refreshSeatOptions($seat, 'hn-th', cfg);
 
-		$date.attr('min', today).val(today);
-		rebuildHours($time, today);
+		syncTravelDateTime($date, $time);
 
 		// Open native date picker when clicking anywhere on the field.
 		$date.on('click', function () {
@@ -288,12 +336,7 @@
 		});
 
 		$date.on('change', function () {
-			var val = $date.val() || today;
-			if (val < today) {
-				$date.val(today);
-				val = today;
-			}
-			rebuildHours($time, val);
+			syncTravelDateTime($date, $time);
 		});
 
 		$route.on('change', function () {
@@ -409,8 +452,7 @@
 					$submit.prop('disabled', false).text(submitLabel);
 					$form[0].reset();
 					$route.val('hn-th');
-					$date.attr('min', today).val(today);
-					rebuildHours($time, today);
+					syncTravelDateTime($date, $time);
 					refreshSeatOptions($seat, 'hn-th', cfg);
 					initCountryCombobox($combo, countries);
 				},

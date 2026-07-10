@@ -41,8 +41,8 @@ if ( ! $items && ! $video_id ) {
 	return;
 }
 
-$embed_src = $video_id
-	? 'https://www.youtube.com/embed/' . rawurlencode( $video_id ) . '?rel=0&modestbranding=1'
+$poster = $video_id
+	? 'https://i.ytimg.com/vi/' . rawurlencode( $video_id ) . '/hqdefault.jpg'
 	: '';
 
 $hotline_raw = xe36_get_site_field( 'hotline', '1900888999' );
@@ -87,17 +87,20 @@ if ( ! is_string( $zalo_url ) || '' === trim( $zalo_url ) ) {
 				</div>
 			</div>
 
-			<?php if ( $embed_src ) : ?>
+			<?php if ( $video_id ) : ?>
 				<div class="home-offers__media">
 					<div class="home-offers__video">
-						<iframe
-							src="<?php echo esc_url( $embed_src ); ?>"
-							title="<?php echo esc_attr( $title ? $title : 'Video ưu đãi' ); ?>"
-							loading="lazy"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							allowfullscreen
-							referrerpolicy="strict-origin-when-cross-origin"
-						></iframe>
+						<button
+							type="button"
+							class="home-offers__facade"
+							data-youtube-facade
+							data-youtube-id="<?php echo esc_attr( $video_id ); ?>"
+							data-youtube-title="<?php echo esc_attr( $title ? $title : 'Video ưu đãi' ); ?>"
+							aria-label="<?php echo esc_attr__( 'Phát video YouTube', 'oceanwp-child' ); ?>"
+							style="background-image:url(<?php echo esc_url( $poster ); ?>)"
+						>
+							<span class="home-offers__play" aria-hidden="true"></span>
+						</button>
 					</div>
 				</div>
 			<?php endif; ?>

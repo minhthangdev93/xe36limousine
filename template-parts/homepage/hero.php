@@ -51,45 +51,78 @@ $image_url = '';
 $image_alt = $hero_title ? (string) $hero_title : 'Xe 36 Limousine';
 $image_w   = 0;
 $image_h   = 0;
+$image_id  = 0;
 
-if ( is_array( $hero_image ) && ! empty( $hero_image['url'] ) ) {
+if ( is_array( $hero_image ) && ! empty( $hero_image['ID'] ) ) {
+	$image_id = (int) $hero_image['ID'];
+} elseif ( is_array( $hero_image ) && ! empty( $hero_image['id'] ) ) {
+	$image_id = (int) $hero_image['id'];
+} elseif ( is_numeric( $hero_image ) ) {
+	$image_id = (int) $hero_image;
+}
+
+if ( $image_id > 0 ) {
+	$meta = wp_get_attachment_image_src( $image_id, 'large' );
+	if ( ! is_array( $meta ) ) {
+		$meta = wp_get_attachment_image_src( $image_id, 'full' );
+	}
+	if ( is_array( $meta ) ) {
+		$image_url = (string) $meta[0];
+		$image_w   = (int) ( $meta[1] ?? 0 );
+		$image_h   = (int) ( $meta[2] ?? 0 );
+	}
+	$meta_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+	if ( $meta_alt ) {
+		$image_alt = (string) $meta_alt;
+	} elseif ( is_array( $hero_image ) && ! empty( $hero_image['alt'] ) ) {
+		$image_alt = (string) $hero_image['alt'];
+	}
+} elseif ( is_array( $hero_image ) && ! empty( $hero_image['url'] ) ) {
 	$image_url = (string) $hero_image['url'];
 	$image_alt = ! empty( $hero_image['alt'] ) ? (string) $hero_image['alt'] : $image_alt;
 	$image_w   = isset( $hero_image['width'] ) ? (int) $hero_image['width'] : 0;
 	$image_h   = isset( $hero_image['height'] ) ? (int) $hero_image['height'] : 0;
-} elseif ( is_numeric( $hero_image ) ) {
-	$image_url = (string) ( wp_get_attachment_image_url( (int) $hero_image, 'full' ) ?: '' );
-	$meta_alt  = get_post_meta( (int) $hero_image, '_wp_attachment_image_alt', true );
-	if ( $meta_alt ) {
-		$image_alt = (string) $meta_alt;
-	}
-	$meta = wp_get_attachment_image_src( (int) $hero_image, 'full' );
-	if ( is_array( $meta ) ) {
-		$image_w = (int) ( $meta[1] ?? 0 );
-		$image_h = (int) ( $meta[2] ?? 0 );
-	}
 } elseif ( is_string( $hero_image ) && '' !== $hero_image ) {
 	$image_url = $hero_image;
 }
 
-$has_image  = '' !== $image_url;
+$has_image  = '' !== $image_url || $image_id > 0;
 $hero_class = 'home-section home-hero xe36-surface-dark' . ( $has_image ? ' home-hero--has-image' : ' home-hero--no-image' );
 $has_cta    = ( $cta1_text && $cta1_url ) || ( $cta2_text && $cta2_url ) || ( $cta3_text && $cta3_url );
 ?>
 <section class="<?php echo esc_attr( $hero_class ); ?>" id="home-hero" data-section="hero">
 	<?php if ( $has_image ) : ?>
 		<div class="home-hero__media" aria-hidden="true">
-			<img
-				class="home-hero__img"
-				src="<?php echo esc_url( $image_url ); ?>"
-				alt=""
-				<?php if ( $image_w > 0 && $image_h > 0 ) : ?>
-					width="<?php echo esc_attr( (string) $image_w ); ?>"
-					height="<?php echo esc_attr( (string) $image_h ); ?>"
-				<?php endif; ?>
-				decoding="async"
-				fetchpriority="high"
-			>
+			<?php
+			if ( $image_id > 0 ) {
+				echo wp_get_attachment_image(
+					$image_id,
+					'large',
+					false,
+					array(
+						'class'         => 'home-hero__img',
+						'alt'           => '',
+						'decoding'      => 'async',
+						'fetchpriority' => 'high',
+						'sizes'         => '100vw',
+					)
+				);
+			} else {
+				?>
+				<img
+					class="home-hero__img"
+					src="<?php echo esc_url( $image_url ); ?>"
+					alt=""
+					<?php if ( $image_w > 0 && $image_h > 0 ) : ?>
+						width="<?php echo esc_attr( (string) $image_w ); ?>"
+						height="<?php echo esc_attr( (string) $image_h ); ?>"
+					<?php endif; ?>
+					decoding="async"
+					fetchpriority="high"
+				>
+				<?php
+			}
+			?>
 		</div>
 	<?php endif; ?>
 

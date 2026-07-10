@@ -377,3 +377,68 @@ button,
 .xe36-surface-dark .xe36-link:focus-visible {
 	color: #fff;
 }
+
+/* Breadcrumb */
+.xe36-breadcrumb {
+	width: 100%;
+	margin: 0 0 calc(var(--xe36-space-unit) * 2);
+	padding: 0;
+	text-align: left;
+}
+
+.xe36-breadcrumb__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--xe36-font-body);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.4;
+	color: var(--xe36-muted);
+}
+
+.xe36-breadcrumb__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.xe36-breadcrumb__item:not(:last-child)::after {
+	content: '/';
+	color: var(--xe36-border);
+	font-weight: 400;
+	speak: never;
+}
+
+.xe36-breadcrumb__link {
+	color: var(--xe36-muted);
+	text-decoration: none;
+	transition: color 0.15s ease;
+}
+
+.xe36-breadcrumb__link:hover,
+.xe36-breadcrumb__link:focus-visible {
+	color: var(--xe36-primary);
+	text-decoration: none;
+}
+
+.xe36-breadcrumb__current {
+	overflow: hidden;
+	max-width: min(28rem, 70vw);
+	color: var(--xe36-text);
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.archive-hero .xe36-breadcrumb,
+.single-hero .xe36-breadcrumb,
+.contact-hero .xe36-breadcrumb {
+	margin-bottom: calc(var(--xe36-space-unit) * 1.5);
+}

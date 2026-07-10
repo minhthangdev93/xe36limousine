@@ -81,11 +81,14 @@ function xe36_enqueue_global_assets() {
 		$version
 	);
 
-	wp_enqueue_style(
-		'xe36-elementor-sync',
-		xe36_theme_uri( 'assets/css/elementor-sync.css' ),
-		array( 'xe36-variables', 'xe36-components' ),
-		$version
-	);
+	// Only needed when Elementor still renders the page.
+	if ( ! function_exists( 'xe36_is_custom_ui' ) || ! xe36_is_custom_ui() ) {
+		wp_enqueue_style(
+			'xe36-elementor-sync',
+			xe36_theme_uri( 'assets/css/elementor-sync.css' ),
+			array( 'xe36-variables', 'xe36-components' ),
+			$version
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'xe36_enqueue_global_assets', 20 );

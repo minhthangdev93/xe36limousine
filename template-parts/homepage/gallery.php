@@ -73,9 +73,10 @@ $slide_count = count( $slides );
 									array(
 										'class'    => 'home-gallery__img',
 										'alt'      => $slide['alt'],
-										'loading'  => 0 === $index ? 'eager' : 'lazy',
+										'loading'  => 'lazy',
 										'decoding' => 'async',
 										'draggable' => 'false',
+										'fetchpriority' => 'low',
 									)
 								);
 								?>

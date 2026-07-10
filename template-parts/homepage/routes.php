@@ -12,28 +12,19 @@ require_once xe36_theme_path( 'inc/booking/routes.php' );
 $title    = xe36_get_homepage_field( 'routes_title', 'Lộ trình phổ biến' );
 $cta_text = xe36_get_homepage_field( 'routes_cta_text', 'Đặt vé ngay' );
 $cards    = xe36_booking_route_cards();
-$images   = xe36_get_homepage_field( 'routes_images', array() );
-
-if ( ! is_array( $images ) ) {
-	$images = array();
-}
 
 if ( ! $cards ) {
 	return;
 }
 
 /**
- * Resolve card image from ACF group (hn_th) by route value (hn-th).
+ * Normalize an ACF image value to id/url/alt.
  *
- * @param string               $route_value Route key.
- * @param array<string, mixed> $images      ACF group.
+ * @param mixed $img ACF image (array|int|false).
  * @return array{id:int,url:string,alt:string}|null
  */
-$resolve_image = static function ( $route_value, $images ) {
-	$key = str_replace( '-', '_', (string) $route_value );
-	$img = $images[ $key ] ?? null;
-
-	if ( is_numeric( $img ) ) {
+$normalize_image = static function ( $img ) {
+	if ( is_numeric( $img ) && (int) $img > 0 ) {
 		$id  = (int) $img;
 		$url = wp_get_attachment_image_url( $id, 'large' );
 		if ( ! $url ) {
@@ -46,21 +37,77 @@ $resolve_image = static function ( $route_value, $images ) {
 		);
 	}
 
-	if ( ! is_array( $img ) || empty( $img['ID'] ) ) {
+	if ( ! is_array( $img ) ) {
 		return null;
 	}
 
-	$id  = (int) $img['ID'];
-	$url = wp_get_attachment_image_url( $id, 'large' );
-	if ( ! $url ) {
-		return null;
+	$id = 0;
+	if ( ! empty( $img['ID'] ) ) {
+		$id = (int) $img['ID'];
+	} elseif ( ! empty( $img['id'] ) ) {
+		$id = (int) $img['id'];
 	}
 
-	return array(
-		'id'  => $id,
-		'url' => $url,
-		'alt' => ! empty( $img['alt'] ) ? (string) $img['alt'] : (string) ( $img['title'] ?? '' ),
-	);
+	if ( $id > 0 ) {
+		$url = wp_get_attachment_image_url( $id, 'large' );
+		if ( ! $url && ! empty( $img['url'] ) ) {
+			$url = (string) $img['url'];
+		}
+		if ( ! $url ) {
+			return null;
+		}
+		return array(
+			'id'  => $id,
+			'url' => $url,
+			'alt' => ! empty( $img['alt'] ) ? (string) $img['alt'] : (string) ( $img['title'] ?? '' ),
+		);
+	}
+
+	if ( ! empty( $img['url'] ) ) {
+		return array(
+			'id'  => 0,
+			'url' => (string) $img['url'],
+			'alt' => ! empty( $img['alt'] ) ? (string) $img['alt'] : '',
+		);
+	}
+
+	return null;
+};
+
+/**
+ * Resolve card image: new flat fields → legacy group routes_images.
+ *
+ * @param string $route_value Route key (hn-th).
+ * @return array{id:int,url:string,alt:string}|null
+ */
+$resolve_image = static function ( $route_value ) use ( $normalize_image ) {
+	$key = str_replace( '-', '_', (string) $route_value );
+
+	// New top-level fields (reliable on ACF options pages).
+	$img = xe36_get_homepage_field( 'routes_img_' . $key, null );
+	$out = $normalize_image( $img );
+	if ( $out ) {
+		return $out;
+	}
+
+	// Legacy group field (pre-fix).
+	if ( function_exists( 'get_field' ) ) {
+		$group = get_field( 'routes_images', xe36_acf_homepage_id() );
+		if ( is_array( $group ) && ! empty( $group[ $key ] ) ) {
+			$out = $normalize_image( $group[ $key ] );
+			if ( $out ) {
+				return $out;
+			}
+		}
+
+		$legacy = get_field( 'routes_images_' . $key, xe36_acf_homepage_id() );
+		$out    = $normalize_image( $legacy );
+		if ( $out ) {
+			return $out;
+		}
+	}
+
+	return null;
 };
 ?>
 <section class="home-section home-routes" id="home-routes" data-section="routes">
@@ -76,26 +123,37 @@ $resolve_image = static function ( $route_value, $images ) {
 			<ul class="home-routes__grid">
 				<?php foreach ( $cards as $card ) : ?>
 					<?php
-					$image = $resolve_image( $card['value'], $images );
+					$image = $resolve_image( $card['value'] );
 					$alt   = $image && $image['alt'] ? $image['alt'] : $card['label'];
 					?>
 					<li class="home-routes__card">
 						<div class="home-routes__media<?php echo $image ? '' : ' home-routes__media--empty'; ?>">
 							<?php if ( $image ) : ?>
-								<?php
-								echo wp_get_attachment_image(
-									$image['id'],
-									'large',
-									false,
-									array(
-										'class'     => 'home-routes__img',
-										'alt'       => $alt,
-										'loading'   => 'lazy',
-										'decoding'  => 'async',
-										'draggable' => 'false',
-									)
-								);
-								?>
+								<?php if ( ! empty( $image['id'] ) ) : ?>
+									<?php
+									echo wp_get_attachment_image(
+										$image['id'],
+										'large',
+										false,
+										array(
+											'class'     => 'home-routes__img',
+											'alt'       => $alt,
+											'loading'   => 'lazy',
+											'decoding'  => 'async',
+											'draggable' => 'false',
+										)
+									);
+									?>
+								<?php else : ?>
+									<img
+										class="home-routes__img"
+										src="<?php echo esc_url( $image['url'] ); ?>"
+										alt="<?php echo esc_attr( $alt ); ?>"
+										loading="lazy"
+										decoding="async"
+										draggable="false"
+									/>
+								<?php endif; ?>
 							<?php endif; ?>
 						</div>
 

@@ -11,12 +11,25 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
-	<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M9S8CX7');</script>
+	<!-- Google Tag Manager (delayed for LCP) -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.xe36LoadGTM = function () {
+	if (window.xe36GtmLoaded) return;
+	window.xe36GtmLoaded = true;
+	window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+	var f = document.getElementsByTagName('script')[0];
+	var j = document.createElement('script');
+	j.async = true;
+	j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-M9S8CX7';
+	f.parentNode.insertBefore(j, f);
+};
+if ('requestIdleCallback' in window) {
+	requestIdleCallback(window.xe36LoadGTM, { timeout: 3500 });
+} else {
+	window.addEventListener('load', function () { setTimeout(window.xe36LoadGTM, 1); });
+}
+</script>
 <!-- End Google Tag Manager -->
 
 	<?php wp_head(); ?>
