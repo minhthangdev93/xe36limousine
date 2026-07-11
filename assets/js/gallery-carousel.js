@@ -1,5 +1,5 @@
 /**
- * Homepage gallery carousel — autoplay 3s + swipe / drag.
+ * Gallery carousel — native touch scroll + snap; mouse drag on desktop; autoplay.
  */
 (function () {
 	'use strict';
@@ -19,21 +19,14 @@
 		var intervalMs = parseInt(root.getAttribute('data-interval'), 10) || 3000;
 		var index = 0;
 		var timer = null;
+		var resumeTimer = null;
+		var scrollRaf = 0;
+		var interacting = false;
+
 		var isPointerDown = false;
 		var startX = 0;
 		var startScroll = 0;
 		var dragged = false;
-		var resumeTimer = null;
-
-		function slideWidth() {
-			return slides[0].getBoundingClientRect().width + getGap();
-		}
-
-		function getGap() {
-			var style = window.getComputedStyle(track);
-			var gap = parseFloat(style.columnGap || style.gap || '0');
-			return isNaN(gap) ? 0 : gap;
-		}
 
 		function clampIndex(i) {
 			var n = slides.length;
@@ -75,10 +68,17 @@
 
 		function startAutoplay() {
 			stopAutoplay();
+			if (interacting) {
+				return;
+			}
 			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 				return;
 			}
-			timer = setInterval(next, intervalMs);
+			timer = setInterval(function () {
+				if (!interacting) {
+					next();
+				}
+			}, intervalMs);
 		}
 
 		function pauseThenResume() {
@@ -86,28 +86,42 @@
 			if (resumeTimer) {
 				clearTimeout(resumeTimer);
 			}
-			resumeTimer = setTimeout(startAutoplay, intervalMs + 1200);
+			resumeTimer = setTimeout(function () {
+				interacting = false;
+				startAutoplay();
+			}, intervalMs + 1200);
 		}
 
 		function syncIndexFromScroll() {
 			var left = viewport.scrollLeft;
 			var best = 0;
 			var bestDist = Infinity;
-			slides.forEach(function (slide, i) {
-				var dist = Math.abs(slide.offsetLeft - left);
+			for (var i = 0; i < slides.length; i++) {
+				var dist = Math.abs(slides[i].offsetLeft - left);
 				if (dist < bestDist) {
 					bestDist = dist;
 					best = i;
 				}
-			});
+			}
 			if (best !== index) {
 				index = best;
 				updateDots();
 			}
 		}
 
+		function onScroll() {
+			if (scrollRaf) {
+				return;
+			}
+			scrollRaf = window.requestAnimationFrame(function () {
+				scrollRaf = 0;
+				syncIndexFromScroll();
+			});
+		}
+
 		if (prevBtn) {
 			prevBtn.addEventListener('click', function () {
+				interacting = true;
 				prev();
 				pauseThenResume();
 			});
@@ -115,6 +129,7 @@
 
 		if (nextBtn) {
 			nextBtn.addEventListener('click', function () {
+				interacting = true;
 				next();
 				pauseThenResume();
 			});
@@ -124,36 +139,46 @@
 			dot.addEventListener('click', function () {
 				var i = parseInt(dot.getAttribute('data-gallery-dot'), 10);
 				if (!isNaN(i)) {
+					interacting = true;
 					goTo(i, true);
 					pauseThenResume();
 				}
 			});
 		});
 
-		viewport.addEventListener(
-			'scroll',
-			function () {
-				window.requestAnimationFrame(syncIndexFromScroll);
-			},
-			{ passive: true }
-		);
+		viewport.addEventListener('scroll', onScroll, { passive: true });
 
+		if ('onscrollend' in window) {
+			viewport.addEventListener(
+				'scrollend',
+				function () {
+					syncIndexFromScroll();
+				},
+				{ passive: true }
+			);
+		}
+
+		/* Touch: native overflow scroll + CSS snap only (no JS scrollLeft). */
 		viewport.addEventListener(
 			'touchstart',
 			function () {
+				interacting = true;
+				stopAutoplay();
 				pauseThenResume();
 			},
 			{ passive: true }
 		);
 
+		/* Mouse drag only — avoids fighting iOS/Android touch scrolling. */
 		viewport.addEventListener('pointerdown', function (e) {
-			if (e.pointerType === 'mouse' && e.button !== 0) {
+			if (e.pointerType !== 'mouse' || e.button !== 0) {
 				return;
 			}
 			isPointerDown = true;
 			dragged = false;
 			startX = e.clientX;
 			startScroll = viewport.scrollLeft;
+			interacting = true;
 			viewport.classList.add('is-dragging');
 			pauseThenResume();
 			try {
@@ -164,7 +189,7 @@
 		});
 
 		viewport.addEventListener('pointermove', function (e) {
-			if (!isPointerDown) {
+			if (!isPointerDown || e.pointerType !== 'mouse') {
 				return;
 			}
 			var dx = e.clientX - startX;
@@ -199,22 +224,28 @@
 		viewport.addEventListener('keydown', function (e) {
 			if (e.key === 'ArrowRight') {
 				e.preventDefault();
+				interacting = true;
 				next();
 				pauseThenResume();
 			} else if (e.key === 'ArrowLeft') {
 				e.preventDefault();
+				interacting = true;
 				prev();
 				pauseThenResume();
 			}
 		});
 
 		root.addEventListener('mouseenter', stopAutoplay);
-		root.addEventListener('mouseleave', startAutoplay);
+		root.addEventListener('mouseleave', function () {
+			if (!interacting) {
+				startAutoplay();
+			}
+		});
 
 		document.addEventListener('visibilitychange', function () {
 			if (document.hidden) {
 				stopAutoplay();
-			} else {
+			} else if (!interacting) {
 				startAutoplay();
 			}
 		});

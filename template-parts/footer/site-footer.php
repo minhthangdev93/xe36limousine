@@ -173,8 +173,8 @@ $year = gmdate( 'Y' );
 					<img
 						src="<?php echo esc_url( content_url( 'uploads/2022/11/thong-bao-bo-cong-thuong-xe36.png' ) ); ?>"
 						alt="Đã thông báo Bộ Công Thương"
-						width="150"
-						height="56"
+						width="140"
+						height="53"
 						loading="lazy"
 						decoding="async"
 					/>

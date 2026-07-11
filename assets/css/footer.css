@@ -199,9 +199,9 @@
 }
 
 .xe36-footer__gov {
-	display: block;
-	width: 80%;
-	max-width: 80%;
+	display: inline-block;
+	width: auto;
+	max-width: 140px;
 	margin-top: 1.5rem;
 	line-height: 0;
 	opacity: 0.95;
@@ -215,7 +215,8 @@
 
 .xe36-footer__gov img {
 	display: block;
-	width: 100%;
+	width: 140px;
+	max-width: 100%;
 	height: auto;
 }
 

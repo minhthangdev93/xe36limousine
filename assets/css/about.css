@@ -281,8 +281,11 @@
 	overflow-x: auto;
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
+	scroll-behavior: auto;
 	-webkit-overflow-scrolling: touch;
+	overscroll-behavior-x: contain;
 	scrollbar-width: none;
+	touch-action: pan-x;
 	padding-left: var(--xe36-margin-mobile, 16px);
 	padding-right: calc(var(--xe36-margin-mobile, 16px) * 0.35);
 }
@@ -303,10 +306,11 @@
 	flex: 0 0 82%;
 	width: 82%;
 	scroll-snap-align: start;
-	scroll-snap-stop: always;
+	scroll-snap-stop: normal;
 	border-radius: var(--xe36-radius-xl, 16px);
 	overflow: hidden;
 	background: #fff;
+	transform: translateZ(0);
 }
 
 .about-gallery__slide img {

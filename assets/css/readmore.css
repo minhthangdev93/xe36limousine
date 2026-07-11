@@ -20,14 +20,14 @@
 	text-justify: inter-word;
 	hyphens: auto;
 	color: rgba(60, 60, 67, 0.85);
-	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-	line-height: 1.65;
+	font-size: 1.25rem;
+	line-height: 1.7;
 }
 
 @media (min-width: 960px) {
 	.readmore-body {
-		font-size: 1.5rem;
-		line-height: 1.7;
+		font-size: 1.65rem;
+		line-height: 1.75;
 	}
 }
 
@@ -53,15 +53,15 @@
 }
 
 .readmore-body h1 {
-	font-size: clamp(1.5rem, 2.4vw, 1.85rem);
+	font-size: 1.8rem;
 }
 
 .readmore-body h2 {
-	font-size: clamp(1.3rem, 2.1vw, 1.55rem);
+	font-size: 1.55rem;
 }
 
 .readmore-body h3 {
-	font-size: clamp(1.15rem, 1.8vw, 1.3rem);
+	font-size: 1.35rem;
 }
 
 .readmore-body p {

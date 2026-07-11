@@ -330,7 +330,7 @@
 
 .home-booking__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1.25);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -340,7 +340,7 @@
 .home-booking__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -481,7 +481,7 @@
 	}
 
 	.home-booking__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 		white-space: nowrap;
 	}
 
@@ -541,7 +541,7 @@
 
 .home-gallery__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -551,7 +551,7 @@
 .home-gallery__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -580,8 +580,9 @@
 	overflow-x: auto;
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
-	scroll-behavior: smooth;
+	scroll-behavior: auto;
 	-webkit-overflow-scrolling: touch;
+	overscroll-behavior-x: contain;
 	scrollbar-width: none;
 	cursor: grab;
 	touch-action: pan-x;
@@ -597,8 +598,8 @@
 
 .home-gallery__viewport.is-dragging {
 	cursor: grabbing;
-	scroll-behavior: auto;
 	scroll-snap-type: none;
+	user-select: none;
 }
 
 .home-gallery__viewport:focus-visible {
@@ -622,7 +623,7 @@
 	width: 82%;
 	max-width: 82%;
 	scroll-snap-align: start;
-	scroll-snap-stop: always;
+	scroll-snap-stop: normal;
 	min-width: 0;
 	box-sizing: border-box;
 }
@@ -636,6 +637,9 @@
 	border-radius: var(--xe36-radius-xl, 16px);
 	background: var(--xe36-bg-soft, #f2f2f7);
 	box-shadow: var(--xe36-shadow-float, 0 4px 16px rgba(0, 0, 0, 0.1));
+	transform: translateZ(0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 
 .home-gallery__img,
@@ -649,6 +653,8 @@
 	user-select: none;
 	-webkit-user-drag: none;
 	pointer-events: none;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 
 .home-gallery__caption {
@@ -732,7 +738,7 @@
 	}
 
 	.home-gallery__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 
 	.home-gallery__viewport {
@@ -788,7 +794,7 @@
 
 .home-routes__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -798,7 +804,7 @@
 .home-routes__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -965,7 +971,7 @@
 	}
 
 	.home-routes__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 
 	.home-routes__viewport {
@@ -1033,7 +1039,7 @@
 
 .home-offers__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -1043,7 +1049,7 @@
 .home-offers__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -1269,7 +1275,7 @@
 	}
 
 	.home-offers__title {
-		font-size: clamp(2rem, 2.4vw, 2.5rem);
+		font-size: 1.8rem;
 	}
 
 	.home-offers__grid {
@@ -1310,7 +1316,7 @@
 
 .home-pricing__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -1320,7 +1326,7 @@
 .home-pricing__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -1542,7 +1548,7 @@
 	}
 
 	.home-pricing__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 
 	.home-pricing__grid {
@@ -1580,7 +1586,7 @@
 
 .home-features__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -1590,7 +1596,7 @@
 .home-features__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -1714,7 +1720,7 @@
 	}
 
 	.home-features__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 
 	.home-features__viewport {
@@ -1759,7 +1765,7 @@
 
 .home-reviews__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -1769,7 +1775,7 @@
 .home-reviews__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -1813,7 +1819,7 @@
 	}
 
 	.home-reviews__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 }
 
@@ -1831,7 +1837,7 @@
 
 .home-faq__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -1841,7 +1847,7 @@
 .home-faq__title {
 	margin: 0;
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.35rem, 2.8vw, 2rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: -0.03em;
@@ -1985,7 +1991,7 @@
 	}
 
 	.home-faq__title {
-		font-size: clamp(2.25rem, 2.8vw, 2.85rem);
+		font-size: 1.8rem;
 	}
 
 	.home-faq__question {
@@ -2112,7 +2118,7 @@
 
 .home-cta__eyebrow {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1.25);
-	font-size: 13px;
+	font-size: 1.8rem;
 	font-weight: 600;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
@@ -2122,7 +2128,7 @@
 .home-cta__title {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1.5);
 	font-family: var(--xe36-font-display);
-	font-size: clamp(1.75rem, 4vw, 2.75rem);
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.15;
 	letter-spacing: -0.03em;
@@ -2318,7 +2324,7 @@
 	}
 
 	.home-cta__title {
-		font-size: clamp(2rem, 2.6vw, 2.65rem);
+		font-size: 1.8rem;
 	}
 
 	.home-cta__text {
