@@ -53,7 +53,7 @@ function xe36_acf_defaults() {
 			'offers_video_url'            => 'https://www.youtube.com/shorts/texzSFipzUQ',
 			'pricing_title'               => 'Bảng giá & lịch chạy',
 			'pricing_schedule_title'      => 'Lịch chạy hàng ngày',
-			'pricing_schedule_subtitle'   => 'Ghế hạng thương gia — Ba Sáu Travel',
+			'pricing_schedule_subtitle'   => 'Ghế hạng thương gia — Xe 36 Limousine',
 			'pricing_schedule_route'      => 'Hà Nội ⇌ Thanh Hóa',
 			'pricing_schedule_morning'    => "04:00\n05:00\n06:00\n07:00\n08:00\n09:00\n10:00\n11:00\n12:00",
 			'pricing_schedule_afternoon'  => "13:00\n14:00\n15:00\n16:00\n17:00\n18:00\n19:00\n20:00",

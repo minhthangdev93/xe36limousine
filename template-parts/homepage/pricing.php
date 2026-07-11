@@ -11,8 +11,12 @@ require_once xe36_theme_path( 'inc/booking/routes.php' );
 
 $title     = xe36_get_homepage_field( 'pricing_title', 'Bảng giá & lịch chạy' );
 $sch_title = xe36_get_homepage_field( 'pricing_schedule_title', 'Lịch chạy hàng ngày' );
-$sch_sub   = xe36_get_homepage_field( 'pricing_schedule_subtitle', 'Ghế hạng thương gia — Ba Sáu Travel' );
+$sch_sub   = xe36_get_homepage_field( 'pricing_schedule_subtitle', 'Ghế hạng thương gia — Xe 36 Limousine' );
 $sch_route = xe36_get_homepage_field( 'pricing_schedule_route', 'Hà Nội ⇌ Thanh Hóa' );
+
+if ( is_string( $sch_sub ) && '' !== $sch_sub ) {
+	$sch_sub = preg_replace( '/Ba\s*Sáu\s*Travel/iu', 'Xe 36 Limousine', $sch_sub );
+}
 
 $morning_raw = xe36_get_homepage_field(
 	'pricing_schedule_morning',
@@ -108,33 +112,50 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 
 			<div class="home-pricing__schedule">
 				<div class="home-pricing__schedule-card">
-					<?php if ( $sch_title ) : ?>
-						<p class="home-pricing__schedule-title"><?php echo esc_html( $sch_title ); ?></p>
-					<?php endif; ?>
-					<?php if ( $sch_sub ) : ?>
-						<p class="home-pricing__schedule-sub"><?php echo esc_html( $sch_sub ); ?></p>
-					<?php endif; ?>
-					<?php if ( $sch_route ) : ?>
-						<p class="home-pricing__schedule-route"><?php echo esc_html( $sch_route ); ?></p>
-					<?php endif; ?>
+					<div class="home-pricing__schedule-head">
+						<?php if ( $sch_title ) : ?>
+							<p class="home-pricing__schedule-title"><?php echo esc_html( $sch_title ); ?></p>
+						<?php endif; ?>
+						<?php if ( $sch_sub ) : ?>
+							<p class="home-pricing__schedule-sub"><?php echo esc_html( $sch_sub ); ?></p>
+						<?php endif; ?>
+						<?php if ( $sch_route ) : ?>
+							<p class="home-pricing__schedule-route"><?php echo esc_html( $sch_route ); ?></p>
+						<?php endif; ?>
+					</div>
 
-					<?php if ( $morning ) : ?>
-						<p class="home-pricing__period">Sáng</p>
-						<ul class="home-pricing__times">
-							<?php foreach ( $morning as $time ) : ?>
-								<li><?php echo esc_html( $time ); ?></li>
-							<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
+					<div class="home-pricing__schedule-blocks">
+						<?php if ( $morning ) : ?>
+							<div class="home-pricing__block">
+								<div class="home-pricing__period">
+									<span class="home-pricing__period-label">Sáng</span>
+									<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $morning ) ); ?> chuyến</span>
+								</div>
+								<ul class="home-pricing__times">
+									<?php foreach ( $morning as $time ) : ?>
+										<li><?php echo esc_html( $time ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+						<?php endif; ?>
 
-					<?php if ( $afternoon ) : ?>
-						<p class="home-pricing__period">Chiều</p>
-						<ul class="home-pricing__times">
-							<?php foreach ( $afternoon as $time ) : ?>
-								<li><?php echo esc_html( $time ); ?></li>
-							<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
+						<?php if ( $afternoon ) : ?>
+							<div class="home-pricing__block">
+								<div class="home-pricing__period">
+									<span class="home-pricing__period-label">Chiều</span>
+									<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $afternoon ) ); ?> chuyến</span>
+								</div>
+								<ul class="home-pricing__times">
+									<?php foreach ( $afternoon as $time ) : ?>
+										<li><?php echo esc_html( $time ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+						<?php endif; ?>
+					</div>
+
+					<p class="home-pricing__schedule-foot">Tần suất 60 phút/chuyến · từ 4h sáng đến 20h</p>
+					<a class="btn home-pricing__cta home-pricing__cta--ghost" href="#home-booking">Đặt vé ngay</a>
 				</div>
 			</div>
 		</div>
