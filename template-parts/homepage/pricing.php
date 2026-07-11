@@ -53,6 +53,7 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 	$base = xe36_booking_seat_price( $seat_key, 'hn-th' );
 	$far  = xe36_booking_seat_price( $seat_key, 'hn-ss' );
 	$price_rows[] = array(
+		'key'   => $seat_key,
 		'label' => $seat_label,
 		'th'    => xe36_booking_format_price( $base ),
 		'far'   => xe36_booking_format_price( $far ),
@@ -71,27 +72,36 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 		<div class="home-pricing__grid">
 			<div class="home-pricing__prices">
 				<div class="home-pricing__card">
-					<h3 class="home-pricing__card-title">Bảng giá vé</h3>
-					<div class="home-pricing__table-wrap">
-						<table class="home-pricing__table">
-							<thead>
-								<tr>
-									<th scope="col">Loại ghế</th>
-									<th scope="col">HN ⇌ Thanh Hóa</th>
-									<th scope="col">HN ⇌ Sầm Sơn / Hải Tiến</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ( $price_rows as $row ) : ?>
-									<tr>
-										<th scope="row"><?php echo esc_html( $row['label'] ); ?></th>
-										<td><?php echo esc_html( $row['th'] ); ?></td>
-										<td><?php echo esc_html( $row['far'] ); ?></td>
-									</tr>
-								<?php endforeach; ?>
-							</tbody>
-						</table>
+					<div class="home-pricing__card-head">
+						<h3 class="home-pricing__card-title">Bảng giá vé</h3>
+						<p class="home-pricing__card-note">Giá niêm yết · thanh toán khi lên xe</p>
 					</div>
+
+					<ul class="home-pricing__list">
+						<?php foreach ( $price_rows as $row ) : ?>
+							<?php
+							$featured = ( 'middle' === $row['key'] );
+							$item_class = 'home-pricing__tier' . ( $featured ? ' is-featured' : '' );
+							?>
+							<li class="<?php echo esc_attr( $item_class ); ?>">
+								<?php if ( $featured ) : ?>
+									<span class="home-pricing__badge">Phổ biến</span>
+								<?php endif; ?>
+								<p class="home-pricing__tier-label"><?php echo esc_html( $row['label'] ); ?></p>
+								<div class="home-pricing__tier-prices">
+									<div class="home-pricing__fare">
+										<span class="home-pricing__fare-route">HN ⇌ Thanh Hóa</span>
+										<span class="home-pricing__fare-amount"><?php echo esc_html( $row['th'] ); ?></span>
+									</div>
+									<div class="home-pricing__fare">
+										<span class="home-pricing__fare-route">HN ⇌ Sầm Sơn / Hải Tiến</span>
+										<span class="home-pricing__fare-amount"><?php echo esc_html( $row['far'] ); ?></span>
+									</div>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+
 					<a class="btn home-pricing__cta" href="#home-booking">Đặt vé ngay</a>
 				</div>
 			</div>
