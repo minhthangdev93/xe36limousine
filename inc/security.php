@@ -1,11 +1,41 @@
 <?php
 /**
- * Security hardening — admin brute-force + comment spam.
+ * Security hardening — login lockout, closed registration, comment spam, uploads.
  *
  * @package OceanWP_Child
  */
 
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * Install / sync must-use lock plugin (survives theme switch issues on first load).
+ */
+function xe36_security_sync_mu_plugin() {
+	$src = trailingslashit( get_stylesheet_directory() ) . 'mu-plugins/xe36-lock-registration.php';
+	if ( ! is_readable( $src ) ) {
+		return;
+	}
+
+	if ( ! defined( 'WPMU_PLUGIN_DIR' ) ) {
+		return;
+	}
+
+	$dir = trailingslashit( WPMU_PLUGIN_DIR );
+	if ( ! is_dir( $dir ) ) {
+		wp_mkdir_p( $dir );
+	}
+
+	$dest = $dir . 'xe36-lock-registration.php';
+	$need = ! file_exists( $dest );
+	if ( ! $need ) {
+		$need = (string) md5_file( $src ) !== (string) md5_file( $dest );
+	}
+	if ( $need ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_copy
+		@copy( $src, $dest );
+	}
+}
+add_action( 'after_setup_theme', 'xe36_security_sync_mu_plugin', 0 );
 
 /** Max failed logins before lockout. */
 define( 'XE36_LOGIN_MAX_ATTEMPTS', 5 );
@@ -560,3 +590,398 @@ function xe36_security_block_uploads_php_request() {
 	}
 }
 add_action( 'init', 'xe36_security_block_uploads_php_request', 0 );
+
+/* -------------------------------------------------------------------------
+ * Khóa đăng ký / tạo tài khoản công khai
+ * (Bot spam → email "Thông tin đăng nhập" bounce về hộp thư)
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Force-disable “Anyone can register”.
+ *
+ * @return string
+ */
+function xe36_security_no_open_registration() {
+	return '0';
+}
+add_filter( 'pre_option_users_can_register', 'xe36_security_no_open_registration' );
+
+/**
+ * Persist closed registration (once per day).
+ */
+function xe36_security_ensure_registration_closed() {
+	if ( get_transient( 'xe36_reg_locked' ) ) {
+		return;
+	}
+	update_option( 'users_can_register', 0 );
+	set_transient( 'xe36_reg_locked', 1, DAY_IN_SECONDS );
+}
+add_action( 'init', 'xe36_security_ensure_registration_closed', 1 );
+
+/**
+ * Block wp-login.php?action=register (+ multisite signup).
+ */
+function xe36_security_block_register_screens() {
+	$action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : 'login'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( 'register' === $action ) {
+		wp_safe_redirect( home_url( '/' ), 302 );
+		exit;
+	}
+
+	// Multisite signup URLs.
+	if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+		$uri = (string) wp_unslash( $_SERVER['REQUEST_URI'] );
+		if ( preg_match( '#/(wp-signup|wp-activate)\.php#i', $uri ) ) {
+			wp_safe_redirect( home_url( '/' ), 302 );
+			exit;
+		}
+	}
+}
+add_action( 'login_init', 'xe36_security_block_register_screens', 0 );
+add_action( 'init', 'xe36_security_block_register_screens', 0 );
+
+/**
+ * Reject any registration attempt at validation.
+ *
+ * @param WP_Error $errors Errors.
+ * @return WP_Error
+ */
+function xe36_security_reject_registration( $errors ) {
+	if ( ! ( $errors instanceof WP_Error ) ) {
+		$errors = new WP_Error();
+	}
+	$errors->add(
+		'xe36_reg_disabled',
+		__( '<strong>Bảo mật:</strong> Đăng ký tài khoản đã bị tắt trên website này.', 'oceanwp-child' )
+	);
+	return $errors;
+}
+add_filter( 'registration_errors', 'xe36_security_reject_registration', 1 );
+add_filter( 'registration_errors', 'xe36_security_reject_registration', 99 );
+
+/**
+ * Never send “Thông tin đăng nhập” / new-user emails (spam vector).
+ */
+add_filter( 'wp_send_new_user_notification_to_user', '__return_false' );
+add_filter( 'wp_send_new_user_notification_to_admin', '__return_false' );
+add_filter( 'wp_password_change_notification_email', static function ( $email ) {
+	$email['to'] = '';
+	return $email;
+} );
+
+/**
+ * Stop WP from wiring new-user notification callbacks.
+ */
+function xe36_security_remove_new_user_notifications() {
+	remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
+	remove_action( 'edit_user_created_user', 'wp_send_new_user_notifications' );
+	remove_action( 'network_site_new_created_user', 'wp_send_new_user_notifications' );
+	remove_action( 'network_site_users_created_user', 'wp_send_new_user_notifications' );
+	remove_action( 'network_user_new_created_user', 'wp_send_new_user_notifications' );
+}
+add_action( 'init', 'xe36_security_remove_new_user_notifications', 0 );
+
+/**
+ * Block creating users via REST for anyone who is not an administrator.
+ *
+ * @param WP_User|WP_Error|null $user    Prepared user.
+ * @param WP_REST_Request       $request Request.
+ * @return WP_User|WP_Error|null
+ */
+function xe36_security_block_rest_user_create( $user, $request ) {
+	unset( $request );
+	if ( current_user_can( 'create_users' ) && current_user_can( 'manage_options' ) ) {
+		return $user;
+	}
+	return new WP_Error(
+		'xe36_rest_user_disabled',
+		__( 'Tạo tài khoản qua API đã bị tắt.', 'oceanwp-child' ),
+		array( 'response' => 403 )
+	);
+}
+add_filter( 'rest_pre_insert_user', 'xe36_security_block_rest_user_create', 1, 2 );
+
+/**
+ * Hide register link on login form.
+ *
+ * @return bool
+ */
+add_filter( 'option_users_can_register', '__return_false' );
+add_filter( 'register', '__return_empty_string' );
+add_filter( 'login_display_language_dropdown', '__return_false' );
+
+/**
+ * Multisite: no public signups.
+ *
+ * @return string
+ */
+add_filter( 'wpmu_active_signup', static function () {
+	return 'none';
+} );
+
+/**
+ * Disable Google Site Kit “Sign in with Google” account creation if present.
+ */
+add_filter( 'googlesitekit_is_feature_enabled', static function ( $enabled, $feature ) {
+	if ( is_string( $feature ) && false !== stripos( $feature, 'signInWithGoogle' ) ) {
+		return false;
+	}
+	return $enabled;
+}, 10, 2 );
+
+/**
+ * Only administrators may create users in wp-admin (no Editor promoting).
+ *
+ * @param array  $caps    Required caps.
+ * @param string $cap     Capability.
+ * @param int    $user_id User ID.
+ * @return array
+ */
+function xe36_security_map_create_users_cap( $caps, $cap, $user_id ) {
+	unset( $user_id );
+	if ( 'create_users' === $cap || 'promote_users' === $cap ) {
+		return array( 'manage_options' );
+	}
+	return $caps;
+}
+add_filter( 'map_meta_cap', 'xe36_security_map_create_users_cap', 10, 3 );
+
+/**
+ * Whether the current request may create a brand-new user.
+ *
+ * @return bool
+ */
+function xe36_security_can_create_user() {
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		return true;
+	}
+	if ( defined( 'WP_IMPORTING' ) && WP_IMPORTING ) {
+		return true;
+	}
+	if ( is_admin() && current_user_can( 'manage_options' ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Hard-block inserting new users outside admin/CLI (stops register + API + plugins).
+ *
+ * @param array $data   User data.
+ * @param bool  $update Updating existing user.
+ * @return array
+ */
+function xe36_security_block_insert_user( $data, $update ) {
+	if ( $update || xe36_security_can_create_user() ) {
+		return $data;
+	}
+
+	// Empty login/email → wp_insert_user fails without creating the account.
+	$data['user_login'] = '';
+	$data['user_email'] = '';
+	$data['user_pass']  = '';
+
+	return $data;
+}
+add_filter( 'wp_pre_insert_user_data', 'xe36_security_block_insert_user', 1, 2 );
+
+/**
+ * Kill XML-RPC entirely (bots still hit xmlrpc.php even when “disabled”).
+ */
+function xe36_security_kill_xmlrpc_request() {
+	if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
+		status_header( 403 );
+		nocache_headers();
+		header( 'Content-Type: text/plain; charset=UTF-8' );
+		echo 'XML-RPC disabled.';
+		exit;
+	}
+}
+add_action( 'init', 'xe36_security_kill_xmlrpc_request', 0 );
+
+/**
+ * Cancel outbound mail that burns Gmail SMTP on spam registrations.
+ *
+ * @param null|bool $return Short-circuit value.
+ * @param array     $atts   wp_mail attributes.
+ * @return null|bool
+ */
+function xe36_security_block_spam_user_mail( $return, $atts ) {
+	if ( null !== $return ) {
+		return $return;
+	}
+
+	$subject = isset( $atts['subject'] ) ? (string) $atts['subject'] : '';
+	$body    = isset( $atts['message'] ) ? (string) $atts['message'] : '';
+	$hay     = $subject . "\n" . $body;
+
+	// Vietnamese + English new-user / login-detail notifications.
+	if ( preg_match( '/thông tin đăng nhập|login details|new user registration|password to log in|mật khẩu của bạn/iu', $hay ) ) {
+		return false;
+	}
+
+	// Crypto spam payloads sometimes leak into mail bodies.
+	if ( preg_match( '/bank reject payment|\.craftum\.io|\d+BTC\b/iu', $hay ) ) {
+		return false;
+	}
+
+	return $return;
+}
+add_filter( 'pre_wp_mail', 'xe36_security_block_spam_user_mail', 1, 2 );
+
+/**
+ * Detect spam / botnet subscriber accounts.
+ *
+ * @param WP_User $user User.
+ * @return bool
+ */
+function xe36_security_is_spam_user( $user ) {
+	if ( ! ( $user instanceof WP_User ) ) {
+		return false;
+	}
+
+	// Never touch administrators / editors / authors.
+	if ( user_can( $user, 'edit_posts' ) || user_can( $user, 'manage_options' ) ) {
+		return false;
+	}
+
+	$hay = strtolower( $user->user_login . ' ' . $user->display_name . ' ' . $user->user_email . ' ' . $user->user_url );
+
+	$needles = array(
+		'bank reject payment',
+		'craftum.io',
+		'btc check',
+		'bitcoin',
+		'wallet connect',
+		'claim airdrop',
+		'dt5507',
+	);
+
+	foreach ( $needles as $needle ) {
+		if ( false !== strpos( $hay, $needle ) ) {
+			return true;
+		}
+	}
+
+	// Login looks like a sentence / URL (normal WP logins are short).
+	if ( strlen( $user->user_login ) > 40 && preg_match( '/\s/', $user->user_login ) ) {
+		return true;
+	}
+
+	if ( preg_match( '/\d+\.\d+\s*btc/i', $user->user_login ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Delete spam subscriber users. Returns how many were removed.
+ *
+ * @param int $limit Max users to scan.
+ * @return int
+ */
+function xe36_security_purge_spam_users( $limit = 500 ) {
+	$deleted = 0;
+	$users   = get_users(
+		array(
+			'role__in' => array( 'subscriber' ),
+			'number'   => absint( $limit ),
+			'orderby'  => 'registered',
+			'order'    => 'DESC',
+			'fields'   => 'all',
+		)
+	);
+
+	if ( ! function_exists( 'wp_delete_user' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+	}
+
+	foreach ( $users as $user ) {
+		if ( ! xe36_security_is_spam_user( $user ) ) {
+			continue;
+		}
+		if ( (int) $user->ID === (int) get_current_user_id() ) {
+			continue;
+		}
+		if ( wp_delete_user( (int) $user->ID ) ) {
+			++$deleted;
+		}
+	}
+
+	return $deleted;
+}
+
+/**
+ * Auto-purge spam users once per hour (admin requests) / daily frontend.
+ */
+function xe36_security_autoload_purge_spam() {
+	$key = is_admin() ? 'xe36_spam_purge_admin' : 'xe36_spam_purge_front';
+	$ttl = is_admin() ? HOUR_IN_SECONDS : DAY_IN_SECONDS;
+
+	if ( get_transient( $key ) ) {
+		return;
+	}
+
+	// Only run purge when an admin is around, or once daily quietly.
+	if ( is_admin() && ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	xe36_security_purge_spam_users( 200 );
+	set_transient( $key, 1, $ttl );
+}
+add_action( 'admin_init', 'xe36_security_autoload_purge_spam', 20 );
+
+/**
+ * Manual cleanup button on Users screen.
+ */
+function xe36_security_users_purge_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'users' !== $screen->id ) {
+		return;
+	}
+
+	$purged = isset( $_GET['xe36_purged'] ) ? absint( $_GET['xe36_purged'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( null !== $purged ) {
+		echo '<div class="notice notice-success is-dismissible"><p>';
+		echo esc_html(
+			sprintf(
+				/* translators: %d: deleted count */
+				__( 'Đã xóa %d tài khoản spam.', 'oceanwp-child' ),
+				$purged
+			)
+		);
+		echo '</p></div>';
+	}
+
+	$url = wp_nonce_url( admin_url( 'users.php?xe36_purge_spam=1' ), 'xe36_purge_spam' );
+	echo '<div class="notice notice-warning"><p>';
+	echo esc_html__( 'Phát hiện đăng ký spam (BTC / craftum)? ', 'oceanwp-child' );
+	echo '<a class="button button-primary" href="' . esc_url( $url ) . '">';
+	echo esc_html__( 'Xóa toàn bộ user spam (Subscriber)', 'oceanwp-child' );
+	echo '</a></p></div>';
+}
+add_action( 'admin_notices', 'xe36_security_users_purge_notice' );
+
+/**
+ * Handle manual spam purge.
+ */
+function xe36_security_handle_manual_purge() {
+	if ( empty( $_GET['xe36_purge_spam'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	check_admin_referer( 'xe36_purge_spam' );
+
+	$deleted = xe36_security_purge_spam_users( 1000 );
+	wp_safe_redirect( add_query_arg( 'xe36_purged', $deleted, admin_url( 'users.php' ) ) );
+	exit;
+}
+add_action( 'admin_init', 'xe36_security_handle_manual_purge', 5 );
