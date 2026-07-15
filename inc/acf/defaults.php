@@ -49,7 +49,7 @@ function xe36_acf_defaults() {
 			'routes_title'                => 'Lộ trình phổ biến',
 			'routes_cta_text'             => 'Đặt vé ngay',
 			'offers_title'                => 'Chương trình ưu đãi',
-			'offers_items'                => "Khứ hồi trong ngày giảm 20.000đ\nBệnh nhân ung thư giảm 50% giá vé\nSinh viên giảm 20.000đ",
+			'offers_items'                => "Khứ hồi trong ngày giảm 20.000đ\nBệnh nhân K giảm 50% giá vé\nSinh viên giảm 20.000đ",
 			'offers_video_url'            => 'https://www.youtube.com/shorts/texzSFipzUQ',
 			'pricing_title'               => 'Bảng giá & lịch chạy',
 			'pricing_schedule_title'      => 'Lịch chạy hàng ngày',

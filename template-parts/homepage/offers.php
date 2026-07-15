@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 $title     = xe36_get_homepage_field( 'offers_title', 'Chương trình ưu đãi' );
 $items_raw = xe36_get_homepage_field(
 	'offers_items',
-	"Khứ hồi trong ngày giảm 20.000đ\nBệnh nhân ung thư giảm 50% giá vé\nSinh viên giảm 20.000đ"
+	"Khứ hồi trong ngày giảm 20.000đ\nBệnh nhân K giảm 50% giá vé\nSinh viên giảm 20.000đ"
 );
 $video_url = xe36_get_homepage_field( 'offers_video_url', 'https://www.youtube.com/shorts/texzSFipzUQ' );
 
