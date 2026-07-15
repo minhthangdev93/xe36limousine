@@ -261,10 +261,8 @@ function xe36_handle_ajax_contact_form() {
 		);
 	}
 
-	$to = xe36_get_site_field( 'booking_email', 'booking.36limousine@gmail.com' );
-	if ( ! is_string( $to ) || '' === trim( $to ) ) {
-		$to = 'booking.36limousine@gmail.com';
-	}
+	// Form liên hệ chỉ gửi tới mailbox booking (không dùng footer_email).
+	$to = 'booking.36limousine@gmail.com';
 
 	$mail_subject = sprintf(
 		'[Liên hệ website] %s%s',
