@@ -52,12 +52,13 @@ function xe36_enqueue_booking_assets() {
 		'xe36-booking',
 		'xe36Booking',
 		array(
-			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
-			'countries'     => xe36_booking_countries(),
-			'seats'         => $seat_meta,
+			'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+			'countries'       => xe36_booking_countries(),
+			'seats'           => $seat_meta,
 			'surchargeRoutes' => array( 'hn-ss', 'ss-hn', 'hn-ht', 'ht-hn' ),
-			'surcharge'     => xe36_booking_seat_surcharge(),
-			'i18n'          => array(
+			'surcharge'       => xe36_booking_seat_surcharge(),
+			'schedules'       => xe36_booking_departure_schedules(),
+			'i18n'            => array(
 				'sending'       => 'Đang gửi yêu cầu...',
 				'phoneInvalid'  => 'Số điện thoại không hợp lệ. Vui lòng nhập 9–15 chữ số.',
 				'routeRequired' => 'Vui lòng chọn tuyến.',

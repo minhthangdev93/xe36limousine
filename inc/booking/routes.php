@@ -42,6 +42,80 @@ function xe36_booking_route_label( $value ) {
 }
 
 /**
+ * Departure time schedules by direction.
+ *
+ * outbound = Hà Nội → Thanh Hóa / Sầm Sơn / Hải Tiến
+ * inbound  = Thanh Hóa / Sầm Sơn / Hải Tiến → Hà Nội
+ *
+ * @return array{outbound: string[], inbound: string[]}
+ */
+function xe36_booking_departure_schedules() {
+	$schedules = array(
+		'outbound' => array(
+			'05:30',
+			'07:00',
+			'08:00',
+			'09:00',
+			'10:00',
+			'11:00',
+			'12:00',
+			'13:00',
+			'14:00',
+			'15:00',
+			'16:00',
+			'17:00',
+			'18:00',
+			'19:00',
+			'20:00',
+			'21:00',
+		),
+		'inbound'  => array(
+			'03:30',
+			'04:40',
+			'05:40',
+			'06:40',
+			'07:40',
+			'08:40',
+			'09:40',
+			'10:40',
+			'11:40',
+			'12:40',
+			'13:40',
+			'14:40',
+			'15:40',
+			'16:40',
+			'17:40',
+			'18:40',
+			'19:40',
+		),
+	);
+
+	/**
+	 * Filter departure schedules by direction.
+	 *
+	 * @param array{outbound: string[], inbound: string[]} $schedules Schedules.
+	 */
+	return apply_filters( 'xe36_booking_departure_schedules', $schedules );
+}
+
+/**
+ * Departure times for a route key.
+ *
+ * @param string $route Route key (e.g. hn-th, th-hn).
+ * @return string[]
+ */
+function xe36_booking_times_for_route( $route ) {
+	$schedules = xe36_booking_departure_schedules();
+	$route     = (string) $route;
+
+	if ( 0 === strpos( $route, 'hn-' ) ) {
+		return $schedules['outbound'];
+	}
+
+	return $schedules['inbound'] ?? $schedules['outbound'];
+}
+
+/**
  * Whether route adds Sầm Sơn / Hải Tiến surcharge (+50.000đ).
  *
  * @param string $route Route key.

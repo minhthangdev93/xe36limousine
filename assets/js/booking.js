@@ -30,30 +30,96 @@
 	}
 
 	/**
-	 * After last trip (20:00), default booking date is tomorrow.
+	 * Whether route is Hà Nội → province (outbound).
 	 */
-	function defaultTravelDate() {
+	function isOutboundRoute(route) {
+		return String(route || '').indexOf('hn-') === 0;
+	}
+
+	/**
+	 * Departure times for the selected route direction.
+	 */
+	function timesForRoute(route, cfg) {
+		var schedules = (cfg && cfg.schedules) || {};
+		var list = isOutboundRoute(route) ? schedules.outbound : schedules.inbound;
+		if (Array.isArray(list) && list.length) {
+			return list;
+		}
+		// Fallback if localize missing.
+		return isOutboundRoute(route)
+			? [
+					'05:30',
+					'07:00',
+					'08:00',
+					'09:00',
+					'10:00',
+					'11:00',
+					'12:00',
+					'13:00',
+					'14:00',
+					'15:00',
+					'16:00',
+					'17:00',
+					'18:00',
+					'19:00',
+					'20:00',
+					'21:00',
+			  ]
+			: [
+					'03:30',
+					'04:40',
+					'05:40',
+					'06:40',
+					'07:40',
+					'08:40',
+					'09:40',
+					'10:40',
+					'11:40',
+					'12:40',
+					'13:40',
+					'14:40',
+					'15:40',
+					'16:40',
+					'17:40',
+					'18:40',
+					'19:40',
+			  ];
+	}
+
+	/**
+	 * Last departure HH:MM for the route direction.
+	 */
+	function lastTripTime(route, cfg) {
+		var times = timesForRoute(route, cfg);
+		return times.length ? times[times.length - 1] : '21:00';
+	}
+
+	/**
+	 * After last trip of the selected direction, default booking date is tomorrow.
+	 */
+	function defaultTravelDate(route, cfg) {
 		var d = new Date();
-		if (d.getHours() >= 20) {
+		var last = lastTripTime(route, cfg);
+		if (nowHHMM() >= last) {
 			d.setDate(d.getDate() + 1);
 		}
 		return toISODate(d);
 	}
 
-	function rebuildHours($time, selectedDate) {
+	function rebuildHours($time, selectedDate, route, cfg) {
 		$time.empty();
 		var isToday = selectedDate === todayISO();
 		var now = nowHHMM();
 		var added = 0;
+		var times = timesForRoute(route, cfg);
 
-		for (var hour = 4; hour <= 20; hour++) {
-			var value = pad(hour) + ':00';
+		times.forEach(function (value) {
 			if (isToday && value <= now) {
-				continue;
+				return;
 			}
 			$time.append(new Option(value, value));
 			added++;
-		}
+		});
 
 		if (!added) {
 			$time.append(new Option('—', ''));
@@ -68,8 +134,8 @@
 	/**
 	 * Ensure date/time are bookable (bump past last trip of the day).
 	 */
-	function syncTravelDateTime($date, $time) {
-		var minDate = defaultTravelDate();
+	function syncTravelDateTime($date, $time, route, cfg) {
+		var minDate = defaultTravelDate(route, cfg);
 		var val = $date.val() || minDate;
 
 		if (val < minDate) {
@@ -78,10 +144,10 @@
 
 		$date.attr('min', minDate).val(val);
 
-		if (!rebuildHours($time, val) && val === todayISO()) {
+		if (!rebuildHours($time, val, route, cfg) && val === todayISO()) {
 			val = addDaysISO(todayISO(), 1);
 			$date.attr('min', val).val(val);
-			rebuildHours($time, val);
+			rebuildHours($time, val, route, cfg);
 		}
 	}
 
@@ -321,7 +387,11 @@
 		$route.val('hn-th');
 		refreshSeatOptions($seat, 'hn-th', cfg);
 
-		syncTravelDateTime($date, $time);
+		function currentRoute() {
+			return $route.val() || 'hn-th';
+		}
+
+		syncTravelDateTime($date, $time, currentRoute(), cfg);
 
 		// Open native date picker when clicking anywhere on the field.
 		$date.on('click', function () {
@@ -336,11 +406,13 @@
 		});
 
 		$date.on('change', function () {
-			syncTravelDateTime($date, $time);
+			syncTravelDateTime($date, $time, currentRoute(), cfg);
 		});
 
 		$route.on('change', function () {
-			refreshSeatOptions($seat, $route.val() || 'hn-th', cfg);
+			var route = currentRoute();
+			refreshSeatOptions($seat, route, cfg);
+			syncTravelDateTime($date, $time, route, cfg);
 		});
 
 		initCountryCombobox($combo, countries);
@@ -452,7 +524,7 @@
 					$submit.prop('disabled', false).text(submitLabel);
 					$form[0].reset();
 					$route.val('hn-th');
-					syncTravelDateTime($date, $time);
+					syncTravelDateTime($date, $time, 'hn-th', cfg);
 					refreshSeatOptions($seat, 'hn-th', cfg);
 					initCountryCombobox($combo, countries);
 				},
