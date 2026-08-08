@@ -12,43 +12,75 @@ require_once xe36_theme_path( 'inc/booking/routes.php' );
 $title     = xe36_get_homepage_field( 'pricing_title', 'Bảng giá & lịch chạy' );
 $sch_title = xe36_get_homepage_field( 'pricing_schedule_title', 'Lịch chạy hàng ngày' );
 $sch_sub   = xe36_get_homepage_field( 'pricing_schedule_subtitle', 'Ghế hạng thương gia — Xe 36 Limousine' );
-$sch_route = xe36_get_homepage_field( 'pricing_schedule_route', 'Hà Nội ⇌ Thanh Hóa' );
 
 if ( is_string( $sch_sub ) && '' !== $sch_sub ) {
 	$sch_sub = preg_replace( '/Ba\s*Sáu\s*Travel/iu', 'Xe 36 Limousine', $sch_sub );
 }
 
-$morning_raw = xe36_get_homepage_field(
-	'pricing_schedule_morning',
-	"04:00\n05:00\n06:00\n07:00\n08:00\n09:00\n10:00\n11:00\n12:00"
-);
-$afternoon_raw = xe36_get_homepage_field(
-	'pricing_schedule_afternoon',
-	"13:00\n14:00\n15:00\n16:00\n17:00\n18:00\n19:00\n20:00"
-);
-
 /**
- * Split multiline times into clean list.
+ * Split departure times into morning (<= 12:00) and afternoon (> 12:00).
  *
- * @param mixed $raw Raw field.
- * @return string[]
+ * @param string[] $times Times HH:MM.
+ * @return array{morning: string[], afternoon: string[]}
  */
-$parse_times = static function ( $raw ) {
-	$out = array();
-	if ( ! is_string( $raw ) || '' === trim( $raw ) ) {
-		return $out;
-	}
-	foreach ( preg_split( '/\r\n|\r|\n|,/', $raw ) as $line ) {
-		$line = trim( $line );
-		if ( '' !== $line ) {
-			$out[] = $line;
+$split_periods = static function ( array $times ) {
+	$morning   = array();
+	$afternoon = array();
+
+	foreach ( $times as $time ) {
+		$time = (string) $time;
+		if ( $time <= '12:00' ) {
+			$morning[] = $time;
+		} else {
+			$afternoon[] = $time;
 		}
 	}
-	return $out;
+
+	return array(
+		'morning'   => $morning,
+		'afternoon' => $afternoon,
+	);
 };
 
-$morning   = $parse_times( $morning_raw );
-$afternoon = $parse_times( $afternoon_raw );
+/**
+ * Footer summary for a direction list.
+ *
+ * @param string[] $times Times.
+ * @return string
+ */
+$direction_foot = static function ( array $times ) {
+	$count = count( $times );
+	if ( 0 === $count ) {
+		return '';
+	}
+
+	$first = $times[0];
+	$last  = $times[ $count - 1 ];
+
+	return sprintf(
+		/* translators: 1: trip count, 2: first time, 3: last time */
+		'%1$d chuyến · %2$s–%3$s',
+		$count,
+		$first,
+		$last
+	);
+};
+
+$schedules = xe36_booking_departure_schedules();
+$directions = array(
+	'outbound' => array(
+		'label'   => 'HN → Thanh Hóa',
+		'times'   => $schedules['outbound'] ?? array(),
+		'periods' => $split_periods( $schedules['outbound'] ?? array() ),
+		'foot'    => $direction_foot( $schedules['outbound'] ?? array() ),
+	),
+	'inbound'  => array(
+		'label'   => 'Thanh Hóa → HN',
+		'times'   => $schedules['inbound'] ?? array(),
+		'periods' => $split_periods( $schedules['inbound'] ?? array() ),
+		'foot'    => $direction_foot( $schedules['inbound'] ?? array() ),
+	),
+);
 
 $seat_types = xe36_booking_seat_types();
 $price_rows = array();
@@ -84,7 +116,7 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 					<ul class="home-pricing__list">
 						<?php foreach ( $price_rows as $row ) : ?>
 							<?php
-							$featured = ( 'middle' === $row['key'] );
+							$featured   = ( 'middle' === $row['key'] );
 							$item_class = 'home-pricing__tier' . ( $featured ? ' is-featured' : '' );
 							?>
 							<li class="<?php echo esc_attr( $item_class ); ?>">
@@ -111,7 +143,7 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 			</div>
 
 			<div class="home-pricing__schedule">
-				<div class="home-pricing__schedule-card">
+				<div class="home-pricing__schedule-card" data-schedule-card>
 					<div class="home-pricing__schedule-head">
 						<?php if ( $sch_title ) : ?>
 							<p class="home-pricing__schedule-title"><?php echo esc_html( $sch_title ); ?></p>
@@ -119,42 +151,68 @@ foreach ( $seat_types as $seat_key => $seat_label ) {
 						<?php if ( $sch_sub ) : ?>
 							<p class="home-pricing__schedule-sub"><?php echo esc_html( $sch_sub ); ?></p>
 						<?php endif; ?>
-						<?php if ( $sch_route ) : ?>
-							<p class="home-pricing__schedule-route"><?php echo esc_html( $sch_route ); ?></p>
-						<?php endif; ?>
+
+						<div class="home-pricing__schedule-toggle" role="group" aria-label="<?php echo esc_attr__( 'Chọn chiều lịch chạy', 'oceanwp-child' ); ?>">
+							<?php foreach ( $directions as $dir_key => $dir ) : ?>
+								<button
+									type="button"
+									class="home-pricing__schedule-tab"
+									data-schedule-dir="<?php echo esc_attr( $dir_key ); ?>"
+									aria-pressed="<?php echo 'outbound' === $dir_key ? 'true' : 'false'; ?>"
+								>
+									<?php echo esc_html( $dir['label'] ); ?>
+								</button>
+							<?php endforeach; ?>
+						</div>
 					</div>
 
-					<div class="home-pricing__schedule-blocks">
-						<?php if ( $morning ) : ?>
-							<div class="home-pricing__block">
-								<div class="home-pricing__period">
-									<span class="home-pricing__period-label">Sáng</span>
-									<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $morning ) ); ?> chuyến</span>
+					<?php foreach ( $directions as $dir_key => $dir ) : ?>
+						<?php
+						$morning   = $dir['periods']['morning'];
+						$afternoon = $dir['periods']['afternoon'];
+						$is_active = ( 'outbound' === $dir_key );
+						?>
+						<div
+							class="home-pricing__schedule-blocks"
+							data-schedule-panel="<?php echo esc_attr( $dir_key ); ?>"
+							<?php echo $is_active ? '' : 'hidden'; ?>
+						>
+							<?php if ( $morning ) : ?>
+								<div class="home-pricing__block">
+									<div class="home-pricing__period">
+										<span class="home-pricing__period-label">Sáng</span>
+										<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $morning ) ); ?> chuyến</span>
+									</div>
+									<ul class="home-pricing__times">
+										<?php foreach ( $morning as $time ) : ?>
+											<li><?php echo esc_html( $time ); ?></li>
+										<?php endforeach; ?>
+									</ul>
 								</div>
-								<ul class="home-pricing__times">
-									<?php foreach ( $morning as $time ) : ?>
-										<li><?php echo esc_html( $time ); ?></li>
-									<?php endforeach; ?>
-								</ul>
-							</div>
-						<?php endif; ?>
+							<?php endif; ?>
 
-						<?php if ( $afternoon ) : ?>
-							<div class="home-pricing__block">
-								<div class="home-pricing__period">
-									<span class="home-pricing__period-label">Chiều</span>
-									<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $afternoon ) ); ?> chuyến</span>
+							<?php if ( $afternoon ) : ?>
+								<div class="home-pricing__block">
+									<div class="home-pricing__period">
+										<span class="home-pricing__period-label">Chiều</span>
+										<span class="home-pricing__period-count"><?php echo esc_html( (string) count( $afternoon ) ); ?> chuyến</span>
+									</div>
+									<ul class="home-pricing__times">
+										<?php foreach ( $afternoon as $time ) : ?>
+											<li><?php echo esc_html( $time ); ?></li>
+										<?php endforeach; ?>
+									</ul>
 								</div>
-								<ul class="home-pricing__times">
-									<?php foreach ( $afternoon as $time ) : ?>
-										<li><?php echo esc_html( $time ); ?></li>
-									<?php endforeach; ?>
-								</ul>
-							</div>
-						<?php endif; ?>
-					</div>
+							<?php endif; ?>
+						</div>
+					<?php endforeach; ?>
 
-					<p class="home-pricing__schedule-foot">Tần suất 60 phút/chuyến · từ 4h sáng đến 20h</p>
+					<p
+						class="home-pricing__schedule-foot"
+						data-schedule-foot
+						data-foot-outbound="<?php echo esc_attr( $directions['outbound']['foot'] ); ?>"
+						data-foot-inbound="<?php echo esc_attr( $directions['inbound']['foot'] ); ?>"
+					><?php echo esc_html( $directions['outbound']['foot'] ); ?></p>
 					<a class="btn home-pricing__cta home-pricing__cta--ghost" href="#home-booking">Đặt vé ngay</a>
 				</div>
 			</div>

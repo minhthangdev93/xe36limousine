@@ -1602,6 +1602,76 @@
 	line-height: 1.3;
 }
 
+.home-pricing__schedule-toggle {
+	margin: 0.45rem 0 0;
+	display: inline-flex;
+	align-self: flex-start;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	padding: 0.2rem;
+	border-radius: 999px;
+	background: rgba(0, 122, 255, 0.08);
+	box-sizing: border-box;
+}
+
+/* Reset OceanWP / theme button chrome — type=button still gets global styles on some setups. */
+.home-pricing__schedule-tab,
+.home-pricing__schedule-tab:hover,
+.home-pricing__schedule-tab:focus,
+.home-pricing__schedule-tab:active,
+.home-pricing__schedule-tab:focus-visible {
+	-webkit-appearance: none;
+	appearance: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0.4rem 0.75rem;
+	min-height: 0;
+	height: auto;
+	width: auto;
+	border: 0;
+	border-radius: 999px;
+	box-shadow: none;
+	background: transparent;
+	color: rgba(60, 60, 67, 0.68);
+	font-family: inherit;
+	font-size: 0.88rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.3;
+	text-transform: none;
+	text-decoration: none;
+	cursor: pointer;
+	transform: none;
+	opacity: 1;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
+}
+
+.home-pricing__schedule-tab:hover {
+	background: rgba(0, 122, 255, 0.1);
+	color: var(--xe36-primary, #007aff);
+}
+
+.home-pricing__schedule-tab[aria-pressed='true'],
+.home-pricing__schedule-tab[aria-pressed='true']:hover,
+.home-pricing__schedule-tab[aria-pressed='true']:focus,
+.home-pricing__schedule-tab[aria-pressed='true']:active {
+	background: rgba(0, 122, 255, 0.14);
+	color: var(--xe36-primary, #007aff);
+}
+
+.home-pricing__schedule-tab:focus-visible {
+	outline: 2px solid var(--xe36-primary, #007aff);
+	outline-offset: 2px;
+}
+
+.home-pricing__schedule-blocks[hidden] {
+	display: none !important;
+}
+
 .home-pricing__schedule-blocks {
 	display: flex;
 	flex-direction: column;
@@ -1687,11 +1757,13 @@
 	color: var(--xe36-accent, #ff9500);
 }
 
-.home-pricing__cta--ghost:hover,
-.home-pricing__cta--ghost:focus-visible {
+.home-pricing a.btn.home-pricing__cta--ghost:hover,
+.home-pricing a.btn.home-pricing__cta--ghost:focus-visible {
 	background: rgba(255, 149, 0, 0.1);
 	border-color: var(--xe36-accent, #ff9500);
 	color: var(--xe36-accent, #ff9500);
+	opacity: 1;
+	transform: none;
 }
 
 .home-pricing__cta--ghost::after {

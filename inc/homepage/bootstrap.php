@@ -99,6 +99,16 @@ function xe36_enqueue_homepage_assets() {
 			true
 		);
 	}
+
+	if ( ! empty( $sections['pricing']['enabled'] ) ) {
+		wp_enqueue_script(
+			'xe36-pricing-schedule',
+			xe36_theme_uri( 'assets/js/pricing-schedule.js' ),
+			array(),
+			$version,
+			true
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'xe36_enqueue_homepage_assets', 30 );
 
