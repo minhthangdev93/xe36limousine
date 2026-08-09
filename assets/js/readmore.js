@@ -37,6 +37,34 @@
 		}
 	}
 
+	function stickyHeaderOffset() {
+		var header = document.querySelector('.xe36-header');
+		if (!header) {
+			return 16;
+		}
+		return Math.ceil(header.getBoundingClientRect().height) + 12;
+	}
+
+	/**
+	 * Keep the SEO block in view after collapse — otherwise page height
+	 * shrinks and mobile browsers clamp scroll to the footer.
+	 */
+	function scrollToWrapper(wrapper) {
+		var target =
+			wrapper.closest('#home-content') ||
+			wrapper.closest('.home-content') ||
+			wrapper;
+		var top =
+			target.getBoundingClientRect().top +
+			window.pageYOffset -
+			stickyHeaderOffset();
+
+		window.scrollTo({
+			top: Math.max(0, top),
+			behavior: 'smooth',
+		});
+	}
+
 	function setOpen(wrapper, open) {
 		var panel = wrapper.querySelector('.readmore-panel');
 		var body = wrapper.querySelector('.readmore-body');
@@ -82,6 +110,9 @@
 		if (fade) {
 			fade.style.opacity = '';
 		}
+
+		// Scroll back before height shrinks so we don't land at page bottom.
+		scrollToWrapper(wrapper);
 
 		requestAnimationFrame(function () {
 			requestAnimationFrame(function () {

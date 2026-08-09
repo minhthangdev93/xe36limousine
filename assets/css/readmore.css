@@ -2,12 +2,14 @@
 
 .readmore-wrapper {
 	width: 100%;
+	overflow-anchor: none;
 }
 
 .readmore-panel {
 	position: relative;
 	overflow: hidden;
 	max-height: 320px;
+	overflow-anchor: none;
 	transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
