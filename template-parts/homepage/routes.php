@@ -141,6 +141,7 @@ $resolve_image = static function ( $route_value ) use ( $normalize_image ) {
 											'loading'   => 'lazy',
 											'decoding'  => 'async',
 											'draggable' => 'false',
+											'sizes'     => '(min-width: 1100px) 400px, (min-width: 768px) 46vw, 82vw',
 										)
 									);
 									?>

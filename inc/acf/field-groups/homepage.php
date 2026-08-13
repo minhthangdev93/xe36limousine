@@ -327,7 +327,7 @@ function xe36_acf_register_homepage_fields() {
 						'return_format' => 'array',
 						'preview_size'  => 'medium',
 						'library'       => 'all',
-						'instructions'  => 'Ảnh đại diện card lộ trình. Nhớ bấm “Lưu trang chủ” sau khi chọn.',
+						'instructions'  => 'Ảnh đại diện card. Khuyến nghị 1024×683px (tỉ lệ 3:2) để không bị cắt. Nhớ bấm “Lưu trang chủ” sau khi chọn.',
 					),
 					array(
 						'key'           => 'field_xe36_route_card_img_th_hn',

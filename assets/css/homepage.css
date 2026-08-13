@@ -885,7 +885,7 @@
 .home-routes__media {
 	position: relative;
 	width: 100%;
-	aspect-ratio: 16 / 10;
+	aspect-ratio: 1024 / 683;
 	background: linear-gradient(135deg, #e8f1ff 0%, #f2f2f7 100%);
 	overflow: hidden;
 }
@@ -902,11 +902,13 @@
 .home-routes__img,
 .home-routes__media img {
 	display: block;
+	position: absolute;
+	inset: 0;
 	width: 100% !important;
 	max-width: 100% !important;
 	height: 100% !important;
 	object-fit: cover;
-	object-position: center;
+	object-position: center center;
 }
 
 .home-routes__body {
