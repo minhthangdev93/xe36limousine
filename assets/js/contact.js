@@ -75,6 +75,11 @@
 					}
 
 					if (ok) {
+						window.dataLayer = window.dataLayer || [];
+						window.dataLayer.push({
+							event: 'contact_submit_success',
+							form_id: 'xe36-contact-form',
+						});
 						form.reset();
 					}
 				})

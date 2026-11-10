@@ -183,6 +183,21 @@
 		);
 	}
 
+	/**
+	 * Push GTM/GA4 conversion event (safe if GTM not loaded yet).
+	 */
+	function pushBookingConversion(payload) {
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push(
+			Object.assign(
+				{
+					event: 'booking_submit_success',
+				},
+				payload || {}
+			)
+		);
+	}
+
 	function seatPrice(seatKey, route, cfg) {
 		var seats = cfg.seats || {};
 		var meta = seats[seatKey];
@@ -504,16 +519,20 @@
 				}
 			}, 1000);
 
+			var ticketQty = $('#ticket-quantity').val();
+			var travelDate = $date.val();
+			var travelTime = $time.val();
+
 			$.ajax({
 				url: cfg.ajaxUrl || '/wp-admin/admin-ajax.php',
 				type: 'POST',
 				data: {
 					action: 'submit_booking_form',
 					route: route,
-					date: $date.val(),
-					time: $time.val(),
+					date: travelDate,
+					time: travelTime,
 					seat: seat,
-					ticket_quantity: $('#ticket-quantity').val(),
+					ticket_quantity: ticketQty,
 					name: $('#name').val(),
 					country_code: $('#country-code').val(),
 					phone: phone,
@@ -522,11 +541,27 @@
 					clearInterval(countdownInterval);
 					$response.html(response);
 					$submit.prop('disabled', false).text(submitLabel);
-					$form[0].reset();
-					$route.val('hn-th');
-					syncTravelDateTime($date, $time, 'hn-th', cfg);
-					refreshSeatOptions($seat, 'hn-th', cfg);
-					initCountryCombobox($combo, countries);
+
+					var isSuccess =
+						$response.find('.xe36-booking-response--success').length > 0 ||
+						(typeof response === 'string' &&
+							response.indexOf('xe36-booking-response--success') !== -1);
+
+					if (isSuccess) {
+						pushBookingConversion({
+							form_id: 'booking-form',
+							booking_route: route,
+							booking_date: travelDate,
+							booking_time: travelTime,
+							booking_seat: seat,
+							booking_quantity: ticketQty,
+						});
+						$form[0].reset();
+						$route.val('hn-th');
+						syncTravelDateTime($date, $time, 'hn-th', cfg);
+						refreshSeatOptions($seat, 'hn-th', cfg);
+						initCountryCombobox($combo, countries);
+					}
 				},
 				error: function () {
 					clearInterval(countdownInterval);
