@@ -191,16 +191,157 @@ function xe36_booking_seat_surcharge() {
 }
 
 /**
+ * Flat-price promo (đồng giá) config — Mon–Fri, listed departure times, from start date.
+ *
+ * @return array{
+ *   enabled:bool,
+ *   start_date:string,
+ *   end_date:string,
+ *   price_th:int,
+ *   price_beach:int,
+ *   times:array{outbound:string[],inbound:string[]}
+ * }
+ */
+function xe36_booking_flat_promo_config() {
+	$defaults = array(
+		'enabled'     => true,
+		'start_date'  => '2026-11-17',
+		'end_date'    => '',
+		'price_th'    => 200000,
+		'price_beach' => 250000,
+		'times'       => array(
+			'outbound' => array( '05:30', '07:00' ),
+			'inbound'  => array( '03:30', '04:40', '05:40', '06:40' ),
+		),
+	);
+
+	// true_false unchecked is 0/false — must not fall through xe36_get_homepage_field empty check.
+	$enabled_raw = function_exists( 'get_field' ) ? get_field( 'booking_flat_promo_enabled', xe36_acf_homepage_id() ) : null;
+	if ( null === $enabled_raw || '' === $enabled_raw ) {
+		$enabled = (bool) $defaults['enabled'];
+	} else {
+		$enabled = (bool) (int) $enabled_raw;
+	}
+
+	$start       = (string) xe36_get_homepage_field( 'booking_flat_promo_start', $defaults['start_date'] );
+	$end         = (string) xe36_get_homepage_field( 'booking_flat_promo_end', '' );
+	$price_th    = (int) xe36_get_homepage_field( 'booking_flat_price_th', $defaults['price_th'] );
+	$price_beach = (int) xe36_get_homepage_field( 'booking_flat_price_beach', $defaults['price_beach'] );
+
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start ) ) {
+		$start = $defaults['start_date'];
+	}
+	if ( '' !== $end && ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $end ) ) {
+		$end = '';
+	}
+	if ( $price_th < 0 ) {
+		$price_th = $defaults['price_th'];
+	}
+	if ( $price_beach < 0 ) {
+		$price_beach = $defaults['price_beach'];
+	}
+
+	$config = array(
+		'enabled'     => $enabled,
+		'start_date'  => $start,
+		'end_date'    => $end,
+		'price_th'    => $price_th,
+		'price_beach' => $price_beach,
+		'times'       => $defaults['times'],
+	);
+
+	/**
+	 * Filter flat promo config.
+	 *
+	 * @param array $config Config.
+	 */
+	return apply_filters( 'xe36_booking_flat_promo_config', $config );
+}
+
+/**
+ * Whether route is Hà Nội → province (outbound).
+ *
+ * @param string $route Route key.
+ * @return bool
+ */
+function xe36_booking_route_is_outbound( $route ) {
+	return 0 === strpos( (string) $route, 'hn-' );
+}
+
+/**
+ * Whether flat promo applies for route + travel date + departure time.
+ *
+ * @param string $route Route key.
+ * @param string $date  Y-m-d.
+ * @param string $time  H:i.
+ * @return bool
+ */
+function xe36_booking_flat_promo_applies( $route, $date, $time ) {
+	$config = xe36_booking_flat_promo_config();
+	if ( empty( $config['enabled'] ) ) {
+		return false;
+	}
+
+	$date = trim( (string) $date );
+	$time = trim( (string) $time );
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) || ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
+		return false;
+	}
+
+	if ( $date < $config['start_date'] ) {
+		return false;
+	}
+	if ( '' !== $config['end_date'] && $date > $config['end_date'] ) {
+		return false;
+	}
+
+	try {
+		$tz  = wp_timezone();
+		$dt  = date_create_immutable( $date . ' 12:00:00', $tz );
+		$dow = $dt ? (int) $dt->format( 'N' ) : 0; // 1=Mon … 7=Sun.
+	} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+		$dow = 0;
+	}
+	if ( $dow < 1 || $dow > 5 ) {
+		return false;
+	}
+
+	$dir   = xe36_booking_route_is_outbound( $route ) ? 'outbound' : 'inbound';
+	$times = $config['times'][ $dir ] ?? array();
+	return in_array( $time, $times, true );
+}
+
+/**
+ * Flat promo unit price for a route (all seats same), or 0 if N/A.
+ *
+ * @param string $route Route key.
+ * @return int
+ */
+function xe36_booking_flat_promo_price_for_route( $route ) {
+	$config = xe36_booking_flat_promo_config();
+	if ( xe36_booking_route_has_seat_surcharge( $route ) ) {
+		return (int) $config['price_beach'];
+	}
+	return (int) $config['price_th'];
+}
+
+/**
  * Seat unit price for a route (VND).
  *
  * @param string $seat  Seat key.
  * @param string $route Route key.
+ * @param string $date  Optional Y-m-d travel date (for flat promo).
+ * @param string $time  Optional H:i departure (for flat promo).
  * @return int
  */
-function xe36_booking_seat_price( $seat, $route ) {
+function xe36_booking_seat_price( $seat, $route, $date = '', $time = '' ) {
 	$bases = xe36_booking_seat_base_prices();
 	if ( ! isset( $bases[ $seat ] ) ) {
 		return 0;
+	}
+
+	if ( xe36_booking_flat_promo_applies( $route, $date, $time ) ) {
+		return xe36_booking_flat_promo_price_for_route( $route );
 	}
 
 	$price = (int) $bases[ $seat ];
@@ -286,9 +427,11 @@ function xe36_booking_route_cards() {
  *
  * @param string $seat  Seat key.
  * @param string $route Route key.
+ * @param string $date  Optional Y-m-d.
+ * @param string $time  Optional H:i.
  * @return string
  */
-function xe36_booking_seat_option_label( $seat, $route ) {
+function xe36_booking_seat_option_label( $seat, $route, $date = '', $time = '' ) {
 	$types = xe36_booking_seat_types();
 	if ( ! isset( $types[ $seat ] ) ) {
 		return $seat;
@@ -297,6 +440,6 @@ function xe36_booking_seat_option_label( $seat, $route ) {
 	return sprintf(
 		'%s — %s',
 		$types[ $seat ],
-		xe36_booking_format_price( xe36_booking_seat_price( $seat, $route ) )
+		xe36_booking_format_price( xe36_booking_seat_price( $seat, $route, $date, $time ) )
 	);
 }

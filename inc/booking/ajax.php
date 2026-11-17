@@ -42,7 +42,7 @@ function xe36_handle_ajax_booking_form() {
 	}
 
 	$route_label = xe36_booking_route_label( $route );
-	$seat_label  = xe36_booking_seat_option_label( $seat, $route );
+	$seat_label  = xe36_booking_seat_option_label( $seat, $route, $date, $time );
 	// Form đặt vé / liên hệ chỉ gửi tới mailbox booking (không dùng footer_email).
 	$to = 'booking.36limousine@gmail.com';
 	$subject     = sprintf(

@@ -198,11 +198,50 @@
 		);
 	}
 
-	function seatPrice(seatKey, route, cfg) {
+	/**
+	 * Flat promo: Mon–Fri, listed times, from startDate (optional endDate).
+	 */
+	function isFlatPromo(route, dateStr, timeStr, cfg) {
+		var promo = (cfg && cfg.flatPromo) || null;
+		if (!promo || !promo.enabled) {
+			return false;
+		}
+		if (!dateStr || !timeStr) {
+			return false;
+		}
+		if (promo.startDate && dateStr < promo.startDate) {
+			return false;
+		}
+		if (promo.endDate && dateStr > promo.endDate) {
+			return false;
+		}
+		// Local noon avoids DST edge cases.
+		var d = new Date(dateStr + 'T12:00:00');
+		if (isNaN(d.getTime())) {
+			return false;
+		}
+		var day = d.getDay(); // 0=Sun … 6=Sat
+		if (day === 0 || day === 6) {
+			return false;
+		}
+		var times = isOutboundRoute(route)
+			? (promo.times && promo.times.outbound) || []
+			: (promo.times && promo.times.inbound) || [];
+		return times.indexOf(timeStr) !== -1;
+	}
+
+	function seatPrice(seatKey, route, cfg, dateStr, timeStr) {
 		var seats = cfg.seats || {};
 		var meta = seats[seatKey];
 		if (!meta) {
 			return 0;
+		}
+		if (isFlatPromo(route, dateStr, timeStr, cfg)) {
+			var beach = (cfg.surchargeRoutes || []).indexOf(route) !== -1;
+			var promo = cfg.flatPromo || {};
+			return beach
+				? Number(promo.priceBeach) || 0
+				: Number(promo.priceTh) || 0;
 		}
 		var price = Number(meta.basePrice) || 0;
 		var surchargeRoutes = cfg.surchargeRoutes || [];
@@ -212,7 +251,7 @@
 		return price;
 	}
 
-	function refreshSeatOptions($seat, route, cfg) {
+	function refreshSeatOptions($seat, route, cfg, dateStr, timeStr) {
 		if (!$seat.length) {
 			return;
 		}
@@ -220,7 +259,10 @@
 		var current = $seat.val() || 'middle';
 		$seat.empty();
 		Object.keys(seats).forEach(function (key) {
-			var label = seats[key].label + ' — ' + formatPrice(seatPrice(key, route, cfg));
+			var label =
+				seats[key].label +
+				' — ' +
+				formatPrice(seatPrice(key, route, cfg, dateStr, timeStr));
 			$seat.append(new Option(label, key));
 		});
 		if (seats[current]) {
@@ -400,13 +442,23 @@
 		var $combo = $form.find('[data-country-combobox]');
 
 		$route.val('hn-th');
-		refreshSeatOptions($seat, 'hn-th', cfg);
 
 		function currentRoute() {
 			return $route.val() || 'hn-th';
 		}
 
+		function refreshPrices() {
+			refreshSeatOptions(
+				$seat,
+				currentRoute(),
+				cfg,
+				$date.val() || '',
+				$time.val() || ''
+			);
+		}
+
 		syncTravelDateTime($date, $time, currentRoute(), cfg);
+		refreshPrices();
 
 		// Open native date picker when clicking anywhere on the field.
 		$date.on('click', function () {
@@ -422,12 +474,17 @@
 
 		$date.on('change', function () {
 			syncTravelDateTime($date, $time, currentRoute(), cfg);
+			refreshPrices();
+		});
+
+		$time.on('change', function () {
+			refreshPrices();
 		});
 
 		$route.on('change', function () {
 			var route = currentRoute();
-			refreshSeatOptions($seat, route, cfg);
 			syncTravelDateTime($date, $time, route, cfg);
+			refreshPrices();
 		});
 
 		initCountryCombobox($combo, countries);

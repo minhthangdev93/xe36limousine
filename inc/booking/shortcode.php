@@ -48,6 +48,8 @@ function xe36_enqueue_booking_assets() {
 		);
 	}
 
+	$promo = xe36_booking_flat_promo_config();
+
 	wp_localize_script(
 		'xe36-booking',
 		'xe36Booking',
@@ -58,6 +60,14 @@ function xe36_enqueue_booking_assets() {
 			'surchargeRoutes' => array( 'hn-ss', 'ss-hn', 'hn-ht', 'ht-hn' ),
 			'surcharge'       => xe36_booking_seat_surcharge(),
 			'schedules'       => xe36_booking_departure_schedules(),
+			'flatPromo'       => array(
+				'enabled'    => ! empty( $promo['enabled'] ),
+				'startDate'  => $promo['start_date'],
+				'endDate'    => $promo['end_date'],
+				'priceTh'    => (int) $promo['price_th'],
+				'priceBeach' => (int) $promo['price_beach'],
+				'times'      => $promo['times'],
+			),
 			'i18n'            => array(
 				'sending'       => 'Đang gửi yêu cầu...',
 				'phoneInvalid'  => 'Số điện thoại không hợp lệ. Vui lòng nhập 9–15 chữ số.',
