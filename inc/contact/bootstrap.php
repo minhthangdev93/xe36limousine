@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Contact page helpers, assets, and AJAX.
  *
@@ -50,7 +50,7 @@ add_filter( 'xe36_is_custom_ui', 'xe36_contact_is_custom_ui' );
 function xe36_contact_defaults() {
 	return array(
 		'contact_hero_eyebrow'  => 'Liên hệ',
-		'contact_hero_title'    => 'Liên hệ Xe 36 Limousine',
+		'contact_hero_title'    => 'Liên hệ Xe 36 Travel Limousine',
 		'contact_hero_text'     => 'Gửi yêu cầu đặt vé, gửi hàng hoặc thuê xe — chúng tôi phản hồi nhanh qua điện thoại, Zalo hoặc email.',
 		'contact_form_title'    => 'Gửi tin nhắn',
 		'contact_form_lead'     => 'Điền thông tin bên dưới, bộ phận CSKH sẽ liên hệ lại sớm nhất.',

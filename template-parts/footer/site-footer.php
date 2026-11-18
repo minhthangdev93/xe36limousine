@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Site footer markup.
  *
@@ -69,7 +69,7 @@ $year = gmdate( 'Y' );
 	<div class="xe36-footer__inner">
 		<div class="xe36-footer__grid">
 			<div class="xe36-footer__brand">
-				<p class="xe36-footer__eyebrow">Xe 36 Limousine</p>
+				<p class="xe36-footer__eyebrow"><?php echo esc_html( function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Travel Limousine' ); ?></p>
 				<?php if ( $company ) : ?>
 					<h2 class="xe36-footer__company"><?php echo esc_html( $company ); ?></h2>
 				<?php endif; ?>
@@ -184,7 +184,7 @@ $year = gmdate( 'Y' );
 
 		<div class="xe36-footer__bottom">
 			<p class="xe36-footer__copy">
-				© <?php echo esc_html( $year ); ?> Xe 36 Limousine · 36 Travel. All rights reserved.
+				© <?php echo esc_html( $year ); ?> <?php echo esc_html( function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Travel Limousine' ); ?>. All rights reserved.
 			</p>
 			<div class="xe36-footer__social" aria-label="Mạng xã hội">
 				<a class="xe36-footer__social-link" href="<?php echo esc_url( $zalo_url ); ?>" target="_blank" rel="noopener noreferrer">Zalo</a>

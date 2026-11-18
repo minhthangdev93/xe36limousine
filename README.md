@@ -1,6 +1,6 @@
-# OceanWP Child — Xe 36 Limousine
+﻿# OceanWP Child — Xe 36 Travel Limousine
 
-Child theme cho site [Xe 36 Limousine](https://xe36limousine.vn) (WordPress + OceanWP + ACF).
+Child theme cho site [Xe 36 Travel Limousine](https://xe36limousine.vn) (WordPress + OceanWP + ACF).
 
 Repo: [minhthangdev93/xe36limousine](https://github.com/minhthangdev93/xe36limousine)
 

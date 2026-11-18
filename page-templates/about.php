@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 /**
  * Template Name: Giới thiệu
- * Description: Trang giới thiệu Xe 36 Limousine — PHP, không phụ thuộc Elementor.
+ * Description: Trang giới thiệu Xe 36 Travel Limousine — PHP, không phụ thuộc Elementor.
  *
  * @package OceanWP_Child
  */

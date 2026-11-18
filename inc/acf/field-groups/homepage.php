@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * ACF field group: Trang chủ (options).
  *
@@ -48,7 +48,7 @@ function xe36_acf_register_homepage_fields() {
 						'label' => 'Thương hiệu (dòng trên)',
 						'name'  => 'hero_title',
 						'type'  => 'text',
-						'instructions' => 'Ví dụ: Xe 36 Limousine',
+						'instructions' => 'Ví dụ: Xe 36 Travel Limousine',
 					),
 					array(
 						'key'   => 'field_xe36_hero_subtitle',
@@ -526,7 +526,7 @@ function xe36_acf_register_homepage_fields() {
 						'label'        => 'Tiêu đề section',
 						'name'         => 'features_title',
 						'type'         => 'text',
-						'instructions' => 'Ví dụ: Lý do chọn xe 36 Limousine',
+						'instructions' => 'Ví dụ: Lý do chọn Xe 36 Travel Limousine',
 					),
 					array(
 						'key'          => 'field_xe36_features_items',

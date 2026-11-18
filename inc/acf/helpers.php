@@ -60,8 +60,15 @@ function xe36_get_homepage_field( $name, $default = null ) {
 	if ( function_exists( 'get_field' ) ) {
 		$value = get_field( $name, xe36_acf_homepage_id() );
 		if ( ! xe36_acf_value_is_empty( $value ) ) {
+			if ( is_string( $value ) && function_exists( 'xe36_normalize_brand_copy' ) ) {
+				return xe36_normalize_brand_copy( $value );
+			}
 			return $value;
 		}
+	}
+
+	if ( is_string( $default ) && function_exists( 'xe36_normalize_brand_copy' ) ) {
+		return xe36_normalize_brand_copy( $default );
 	}
 
 	return $default;
@@ -83,8 +90,15 @@ function xe36_get_site_field( $name, $default = null ) {
 	if ( function_exists( 'get_field' ) ) {
 		$value = get_field( $name, xe36_acf_site_id() );
 		if ( ! xe36_acf_value_is_empty( $value ) ) {
+			if ( is_string( $value ) && function_exists( 'xe36_normalize_brand_copy' ) && 'footer_company' !== $name ) {
+				return xe36_normalize_brand_copy( $value );
+			}
 			return $value;
 		}
+	}
+
+	if ( is_string( $default ) && function_exists( 'xe36_normalize_brand_copy' ) && 'footer_company' !== $name ) {
+		return xe36_normalize_brand_copy( $default );
 	}
 
 	return $default;

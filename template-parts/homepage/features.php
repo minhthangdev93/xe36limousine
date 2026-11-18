@@ -1,6 +1,6 @@
 <?php
 /**
- * Homepage section: Why choose Xe 36 Limousine.
+ * Homepage section: Why choose Xe 36 Travel Limousine.
  *
  * @package OceanWP_Child
  */

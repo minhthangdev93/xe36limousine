@@ -8,12 +8,21 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Primary site brand name.
+ * Primary site brand name (public-facing).
  *
  * @return string
  */
 function xe36_brand_site_name() {
-	return 'Xe 36 Limousine';
+	return 'Xe 36 Travel Limousine';
+}
+
+/**
+ * Short brand variant.
+ *
+ * @return string
+ */
+function xe36_brand_short_name() {
+	return '36 Travel Limousine';
 }
 
 /**
@@ -22,8 +31,87 @@ function xe36_brand_site_name() {
  * @return string[]
  */
 function xe36_brand_alternate_names() {
-	return array( '36 Travel Limousine', 'xe36limousine.vn' );
+	return array(
+		xe36_brand_short_name(),
+		'Xe 36 Limousine',
+		'36 Travel',
+		'xe36limousine.vn',
+	);
 }
+
+/**
+ * Normalize legacy brand strings in copy to the unified name.
+ *
+ * Does not rewrite legal company name "CÔNG TY CỔ PHẦN 36 TRAVEL".
+ *
+ * @param mixed $text Text or other.
+ * @return mixed
+ */
+function xe36_normalize_brand_copy( $text ) {
+	if ( ! is_string( $text ) || '' === $text ) {
+		return $text;
+	}
+
+	// Protect legal entity line from partial "36 Travel" rewrites.
+	$legal_token = '___XE36_LEGAL_COMPANY___';
+	$protected   = preg_replace(
+		'/CÔNG TY CỔ PHẦN 36 TRAVEL/iu',
+		$legal_token,
+		$text
+	);
+
+	$replacements = array(
+		'Xe 36 Travel Limousine' => 'Xe 36 Travel Limousine', // no-op anchor
+		'36 BA SÁU TRAVEL'       => xe36_brand_site_name(),
+		'36 Ba Sáu Travel'       => xe36_brand_site_name(),
+		'Ba Sáu Travel'          => xe36_brand_site_name(),
+		'Ba Sau Travel'          => xe36_brand_site_name(),
+		'Xe 36 Limousine'        => xe36_brand_site_name(),
+		'xe 36 limousine'        => xe36_brand_site_name(),
+	);
+
+	foreach ( $replacements as $from => $to ) {
+		if ( 'Xe 36 Travel Limousine' === $from ) {
+			continue;
+		}
+		$protected = str_ireplace( $from, $to, $protected );
+	}
+
+	// Standalone "36 Travel" (not already part of longer brand / legal token).
+	$protected = preg_replace(
+		'/\b36 Travel\b(?!\s+Limousine)/u',
+		xe36_brand_short_name(),
+		$protected
+	);
+
+	return str_replace( $legal_token, 'CÔNG TY CỔ PHẦN 36 TRAVEL', $protected );
+}
+
+/**
+ * Force WP site title to unified brand.
+ *
+ * @param mixed $value Blog name.
+ * @return string
+ */
+function xe36_filter_blogname( $value ) {
+	return xe36_brand_site_name();
+}
+add_filter( 'pre_option_blogname', 'xe36_filter_blogname' );
+
+/**
+ * @param array $parts Document title parts.
+ * @return array
+ */
+function xe36_filter_document_title_parts( $parts ) {
+	if ( isset( $parts['site'] ) ) {
+		$parts['site'] = xe36_brand_site_name();
+	}
+	if ( isset( $parts['title'] ) && is_string( $parts['title'] ) ) {
+		$parts['title'] = xe36_normalize_brand_copy( $parts['title'] );
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'xe36_filter_document_title_parts', 20 );
 
 /**
  * Sync Rank Math title settings with unified brand.
@@ -43,6 +131,18 @@ function xe36_sync_rank_math_brand_settings( $settings ) {
 	return $settings;
 }
 add_filter( 'option_rank-math-options-titles', 'xe36_sync_rank_math_brand_settings' );
+
+/**
+ * Normalize Rank Math frontend title/description brand strings.
+ *
+ * @param string $text Title or description.
+ * @return string
+ */
+function xe36_filter_rank_math_brand_text( $text ) {
+	return xe36_normalize_brand_copy( $text );
+}
+add_filter( 'rank_math/frontend/title', 'xe36_filter_rank_math_brand_text', 20 );
+add_filter( 'rank_math/frontend/description', 'xe36_filter_rank_math_brand_text', 20 );
 
 /**
  * Normalize WebSite / Organization names in Rank Math JSON-LD.
@@ -85,6 +185,22 @@ function xe36_sync_rank_math_schema_brand( $data ) {
 	return $data;
 }
 add_filter( 'rank_math/json_ld', 'xe36_sync_rank_math_schema_brand', 100 );
+
+/**
+ * Normalize ACF text fields on output.
+ *
+ * @param mixed $value Field value.
+ * @return mixed
+ */
+function xe36_acf_normalize_brand_value( $value ) {
+	if ( is_string( $value ) ) {
+		return xe36_normalize_brand_copy( $value );
+	}
+	return $value;
+}
+add_filter( 'acf/format_value/type=text', 'xe36_acf_normalize_brand_value', 20 );
+add_filter( 'acf/format_value/type=textarea', 'xe36_acf_normalize_brand_value', 20 );
+add_filter( 'acf/format_value/type=wysiwyg', 'xe36_acf_normalize_brand_value', 20 );
 
 /**
  * Normalize ACF / attachment / URL image value to a full URL.

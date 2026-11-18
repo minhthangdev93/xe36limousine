@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Template Name: UI Preview (Elite Motion)
  * Description: Trang xem trước design system — không index, chỉ dùng nội bộ.
@@ -15,7 +15,7 @@ xe36_custom_ui_shell_open();
 				<div class="xe36-surface-dark xe36-ui-preview__hero">
 					<div class="xe36-container">
 						<p class="text-label-caps">Elite Motion · Hybrid</p>
-						<h1 class="text-display-lg">Xe 36 Limousine — UI Preview</h1>
+						<h1 class="text-display-lg">Xe 36 Travel Limousine — UI Preview</h1>
 						<p>Hero navy tối · nội dung &amp; form nền sáng · footer navy.</p>
 					</div>
 				</div>

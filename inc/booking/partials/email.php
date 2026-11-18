@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * HTML email for booking request notifications.
  *
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string
  */
 function xe36_booking_email_html( array $data ) {
-	$brand   = function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Limousine';
+	$brand   = function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Travel Limousine';
 	$hotline = xe36_get_site_field( 'hotline_display', '' );
 	if ( ! is_string( $hotline ) || '' === trim( $hotline ) ) {
 		$hotline = xe36_get_site_field( 'hotline', '' );

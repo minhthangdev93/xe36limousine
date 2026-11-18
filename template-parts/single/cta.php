@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Single: Bottom CTA.
  *
@@ -22,7 +22,7 @@ $back = ! empty( $cats ) ? get_category_link( $cats[0]->term_id ) : home_url( '/
 <section class="single-section single-cta" id="single-cta">
 	<div class="single-section__inner single-cta__inner">
 		<h2 class="single-cta__title">Cần đặt xe hoặc gửi hàng?</h2>
-		<p class="single-cta__text">Liên hệ tổng đài 24/7 hoặc gửi form — Xe 36 Limousine hỗ trợ nhanh.</p>
+		<p class="single-cta__text">Liên hệ tổng đài 24/7 hoặc gửi form — Xe 36 Travel Limousine hỗ trợ nhanh.</p>
 		<div class="single-cta__actions">
 			<a class="btn single-cta__btn single-cta__btn--primary" href="<?php echo esc_url( home_url( '/lien-he/' ) ); ?>">Liên hệ</a>
 			<a class="btn single-cta__btn single-cta__btn--call" href="<?php echo esc_url( $hotline_tel ); ?>">Gọi <?php echo esc_html( $hotline_display ); ?></a>

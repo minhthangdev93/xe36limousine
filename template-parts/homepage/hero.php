@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Homepage section: Hero — brand, route, facts, CTAs over banner image.
  *
@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$hero_title     = xe36_get_homepage_field( 'hero_title', 'Xe 36 Limousine' );
+$hero_title     = xe36_get_homepage_field( 'hero_title', 'Xe 36 Travel Limousine' );
 $hero_subtitle  = xe36_get_homepage_field(
 	'hero_subtitle',
 	'Tuyến Hà Nội ⇌ TP Thanh Hóa / Sầm Sơn / Hải Tiến'
@@ -48,7 +48,7 @@ if ( is_string( $hero_facts_raw ) && '' !== trim( $hero_facts_raw ) ) {
 }
 
 $image_url = '';
-$image_alt = $hero_title ? (string) $hero_title : 'Xe 36 Limousine';
+$image_alt = $hero_title ? (string) $hero_title : 'Xe 36 Travel Limousine';
 $image_w   = 0;
 $image_h   = 0;
 $image_id  = 0;

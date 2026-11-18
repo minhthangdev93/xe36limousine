@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Passenger: Intro (left) + pricing image (right).
  *
@@ -70,7 +70,7 @@ if ( ! is_string( $cta_url ) || '' === trim( $cta_url ) ) {
 				<figure class="pax-pricing__side-media">
 					<img
 						src="<?php echo esc_url( $intro_image ); ?>"
-						alt="<?php echo esc_attr( is_string( $intro_title ) ? $intro_title : 'Xe 36 Limousine' ); ?>"
+						alt="<?php echo esc_attr( is_string( $intro_title ) ? $intro_title : 'Xe 36 Travel Limousine' ); ?>"
 						loading="lazy"
 						decoding="async"
 					/>

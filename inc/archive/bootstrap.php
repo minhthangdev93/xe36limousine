@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Blog / archive helpers and assets.
  *
@@ -115,7 +115,7 @@ function xe36_archive_description() {
 				return $excerpt;
 			}
 		}
-		return 'Cập nhật tin tức, hướng dẫn và thông tin dịch vụ Xe 36 Limousine.';
+		return 'Cập nhật tin tức, hướng dẫn và thông tin dịch vụ Xe 36 Travel Limousine.';
 	}
 
 	$desc = get_the_archive_description();
@@ -129,7 +129,7 @@ function xe36_archive_description() {
 	}
 
 	if ( is_category( 'dich-vu' ) ) {
-		return 'Các dịch vụ vận chuyển hành khách, hàng hóa và thuê xe của Xe 36 Limousine.';
+		return 'Các dịch vụ vận chuyển hành khách, hàng hóa và thuê xe của Xe 36 Travel Limousine.';
 	}
 
 	return '';

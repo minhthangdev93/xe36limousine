@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Passenger service page helpers and assets.
  *
@@ -57,10 +57,10 @@ function xe36_passenger_defaults() {
 		'pax_hero_cta_text'  => 'Đặt vé ngay',
 		'pax_hero_cta_url'   => home_url( '/#home-booking' ),
 		'pax_hero_image'     => $uploads . '/2022/12/limousine-thanh-hoa-ha-noi.jpg',
-		'pax_pricing_title'  => 'Bảng giá dịch vụ Xe 36 Limousine 11 chỗ tuyến Thanh Hóa - Hà Nội',
+		'pax_pricing_title'  => 'Bảng giá dịch vụ Xe 36 Travel Limousine 11 chỗ tuyến Thanh Hóa - Hà Nội',
 		'pax_pricing_image'  => $uploads . '/2026/07/bao-gia-limousine-ha-noi-thanh-hoa.jpg',
 		'pax_intro_title'    => 'Tuyến trọng điểm Hà Nội ⇔ Thanh Hóa',
-		'pax_intro_text'     => "Xe 36 Limousine tuyến Thanh Hóa - Hà Nội là tuyến trọng điểm Công ty đưa vào khai thác kết hợp phục vụ nhu cầu đi lại của người dân địa phương, khách đi công việc hay tham quan du lịch giữa Thanh Hóa và Hà Nội.\n\nVới dòng xe Limousine VIP 11 chỗ đẳng cấp bản thương gia trên tuyến Thanh Hóa - Hà Nội được đưa vào khai thác cùng với chất lượng phục vụ chuyên nghiệp, Xe 36 Limousine cam kết đem đến cho Khách hàng dịch vụ tốt nhất, mang đến sự tiện lợi và thoải mái cho chuyến đi của Quý khách.",
+		'pax_intro_text'     => "Xe 36 Travel Limousine tuyến Thanh Hóa - Hà Nội là tuyến trọng điểm Công ty đưa vào khai thác kết hợp phục vụ nhu cầu đi lại của người dân địa phương, khách đi công việc hay tham quan du lịch giữa Thanh Hóa và Hà Nội.\n\nVới dòng xe Limousine VIP 11 chỗ đẳng cấp bản thương gia trên tuyến Thanh Hóa - Hà Nội được đưa vào khai thác cùng với chất lượng phục vụ chuyên nghiệp, Xe 36 Travel Limousine cam kết đem đến cho Khách hàng dịch vụ tốt nhất, mang đến sự tiện lợi và thoải mái cho chuyến đi của Quý khách.",
 		'pax_intro_image'    => $uploads . '/2022/12/limousine-thanh-hoa-ha-noi.jpg',
 		'pax_features_title' => 'Tiêu chuẩn vàng dịch vụ Limousine',
 		'pax_features_lead'  => 'Lựa chọn đặt xe của chúng tôi, Quý khách hàng sẽ được trải nghiệm những dịch vụ tốt nhất:',

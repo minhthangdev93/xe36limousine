@@ -60,7 +60,7 @@ function xe36_cargo_defaults() {
 		'cargo_pricing_title'  => 'Bảng giá vận chuyển hàng hóa',
 		'cargo_pricing_images' => $uploads . "/2022/12/gui-hang-hoa-2.jpg\n" . $uploads . '/2022/12/gui-hang-hoa-1.jpg',
 		'cargo_intro_title'    => 'Chuyến phát nhanh siêu tốc — siêu rẻ',
-		'cargo_intro_text'     => "Để đáp ứng nhu cầu vận chuyển hàng hóa, 36 Travel cung cấp dịch vụ chuyển phát nhanh siêu tốc bằng xe Limousine cao cấp. Cam kết bưu kiện được bảo quản và xếp ngay ngắn trong suốt quá trình vận chuyển.\n\nGiảm tới 50% chi phí vận chuyển cho tất cả mặt hàng. Giao hàng nhanh chóng, chuyển phát tận nơi, nhận thu COD, hỗ trợ tư vấn 24/7.",
+		'cargo_intro_text'     => "Để đáp ứng nhu cầu vận chuyển hàng hóa, Xe 36 Travel Limousine cung cấp dịch vụ chuyển phát nhanh siêu tốc bằng xe Limousine cao cấp. Cam kết bưu kiện được bảo quản và xếp ngay ngắn trong suốt quá trình vận chuyển.\n\nGiảm tới 50% chi phí vận chuyển cho tất cả mặt hàng. Giao hàng nhanh chóng, chuyển phát tận nơi, nhận thu COD, hỗ trợ tư vấn 24/7.",
 		'cargo_intro_image'    => $uploads . '/2022/12/van-chuyen-hang-hoa-thanh-hoa.jpg',
 		'cargo_features_title' => 'Cam kết dịch vụ gửi hàng',
 		'cargo_features_lead'  => 'Đừng bỏ lỡ cơ hội trải nghiệm dịch vụ gửi hàng chất lượng:',

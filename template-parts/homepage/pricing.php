@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Homepage section: Price table (left) + daily schedule (right).
  *
@@ -11,10 +11,10 @@ require_once xe36_theme_path( 'inc/booking/routes.php' );
 
 $title     = xe36_get_homepage_field( 'pricing_title', 'Bảng giá & lịch chạy' );
 $sch_title = xe36_get_homepage_field( 'pricing_schedule_title', 'Lịch chạy hàng ngày' );
-$sch_sub   = xe36_get_homepage_field( 'pricing_schedule_subtitle', 'Ghế hạng thương gia — Xe 36 Limousine' );
+$sch_sub   = xe36_get_homepage_field( 'pricing_schedule_subtitle', 'Ghế hạng thương gia — Xe 36 Travel Limousine' );
 
-if ( is_string( $sch_sub ) && '' !== $sch_sub ) {
-	$sch_sub = preg_replace( '/Ba\s*Sáu\s*Travel/iu', 'Xe 36 Limousine', $sch_sub );
+if ( is_string( $sch_sub ) && '' !== $sch_sub && function_exists( 'xe36_normalize_brand_copy' ) ) {
+	$sch_sub = xe36_normalize_brand_copy( $sch_sub );
 }
 
 /**

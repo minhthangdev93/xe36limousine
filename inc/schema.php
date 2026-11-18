@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Schema.org / Rank Math LocalBusiness — built from live site ACF data.
  *
@@ -99,7 +99,7 @@ function xe36_schema_business_profile() {
 		: array();
 
 	return array(
-		'name'           => function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Limousine',
+		'name'           => function_exists( 'xe36_brand_site_name' ) ? xe36_brand_site_name() : 'Xe 36 Travel Limousine',
 		'legalName'      => $company,
 		'alternateName'  => function_exists( 'xe36_brand_alternate_names' ) ? xe36_brand_alternate_names() : array( '36 Travel Limousine' ),
 		'description'    => $tagline,
@@ -293,7 +293,7 @@ function xe36_schema_departments( array $profile ) {
 	foreach ( (array) $profile['hn_offices'] as $addr ) {
 		$deps[] = array(
 			'@type'   => 'Organization',
-			'name'    => 'Văn phòng Hà Nội — Xe 36 Limousine',
+			'name'    => 'Văn phòng Hà Nội — Xe 36 Travel Limousine',
 			'parentOrganization' => array( '@id' => home_url( '/#organization' ) ),
 			'address' => array(
 				'@type'           => 'PostalAddress',
@@ -308,7 +308,7 @@ function xe36_schema_departments( array $profile ) {
 	foreach ( (array) $profile['th_offices'] as $addr ) {
 		$deps[] = array(
 			'@type'   => 'Organization',
-			'name'    => 'Văn phòng Thanh Hóa — Xe 36 Limousine',
+			'name'    => 'Văn phòng Thanh Hóa — Xe 36 Travel Limousine',
 			'parentOrganization' => array( '@id' => home_url( '/#organization' ) ),
 			'address' => array(
 				'@type'           => 'PostalAddress',
