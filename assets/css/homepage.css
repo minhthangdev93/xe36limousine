@@ -86,16 +86,19 @@
 	max-width: 64rem;
 }
 
-/* 1 — Brand: scale to match width of the 4 fact boxes */
+/* 1 — Brand: scale to fit full "Xe 36 Travel Limousine" in fact-box width */
 .home-hero__brand {
 	margin: 0 0 calc(var(--xe36-space-unit) * 1.15);
+	box-sizing: border-box;
+	padding-inline: 0.06em;
 	font-family: var(--xe36-font-display, var(--xe36-font-body));
-	font-size: clamp(2.4rem, calc(min(100vw, 64rem) / 9.4), 7.25rem);
+	font-size: clamp(1.85rem, calc(min(100vw, 64rem) / 13.2), 5.35rem);
 	font-weight: 700;
-	letter-spacing: -0.035em;
-	line-height: 1;
+	letter-spacing: -0.03em;
+	line-height: 1.05;
 	text-align: center;
 	white-space: nowrap;
+	overflow: visible;
 	background: linear-gradient(105deg, #ffffff 0%, #5ac8fa 35%, #007aff 65%, #5856d6 100%);
 	-webkit-background-clip: text;
 	background-clip: text;
