@@ -52,18 +52,18 @@ function xe36_about_defaults() {
 
 	return array(
 		'about_hero_eyebrow'   => 'Về chúng tôi',
-		'about_hero_title'     => 'Giới thiệu 36 Limousine',
+		'about_hero_title'     => 'Giới thiệu Xe 36 Travel Limousine',
 		'about_hero_text'      => 'Vận chuyển hành khách và hàng hóa bằng xe Limousine Dcar Solati đời mới tuyến Hà Nội – Thanh Hóa – Sầm Sơn – Hải Tiến đưa đón tận nơi.',
 		'about_hero_cta_text'  => 'Đặt vé ngay',
 		'about_hero_cta_url'   => home_url( '/#home-booking' ),
 		'about_hero_image'     => $uploads . '/2022/12/limousine-thanh-hoa-ha-noi.jpg',
-		'about_benefits_title' => 'Tại sao chọn 36 Limousine',
+		'about_benefits_title' => 'Tại sao chọn Xe 36 Travel Limousine',
 		'about_benefits'       => "Limousine Vip|Xe Limousine VIP 11 chỗ nội thất sang trọng\nLinh hoạt|Tần suất 1 tiếng 1 chuyến, hoạt động từ 5h sáng đến 20h tối\nTiết kiệm|Đưa đón tận nơi, tiết kiệm thời gian di chuyển\nNhanh chóng|Đặt vé nhanh chóng trong 20 giây, hỗ trợ 24/7",
 		'about_services_title' => 'Dịch vụ',
-		'about_services_sub'   => 'Dịch vụ nổi bật xe 36 Limousine',
+		'about_services_sub'   => 'Dịch vụ nổi bật Xe 36 Travel Limousine',
 		'about_services'       => "Đưa đón hành khách|Đưa đón hành khách tuyến Hà Nội - Thanh Hóa tận nơi|/van-chuyen-hanh-khach/|" . $uploads . "/2022/12/xe-limousine-ha-noi-thanh-hoa.jpg\nVận chuyển hàng hóa|Vận chuyển hàng hóa siêu tốc, nhận hàng sau 3 tiếng|/van-chuyen-hang-hoa/|" . $uploads . "/2022/12/xe-limousine-ha-noi-thanh-hoa.jpg\nThuê xe có lái|Hợp đồng cho thuê xe có lái đi công việc, đi du lịch giá tốt|/lien-he/|" . $uploads . "/2022/12/noi-that-xe-36-limousine-vip-1.jpg",
 		'about_gallery_title'  => 'Hình ảnh nội thất',
-		'about_gallery_text'   => 'Nội thất tiện nghi sang trọng, chỉ có tại 36 Limousine',
+		'about_gallery_text'   => 'Nội thất tiện nghi sang trọng, chỉ có tại Xe 36 Travel Limousine',
 		'about_gallery_images' => implode(
 			"\n",
 			array(

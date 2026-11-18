@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$title     = xe36_get_homepage_field( 'features_title', 'Lý do chọn xe 36 Limousine' );
+$title     = xe36_get_homepage_field( 'features_title', 'Lý do chọn Xe 36 Travel Limousine' );
 $items_raw = xe36_get_homepage_field(
 	'features_items',
 	"Không phải thanh toán trước|Đặt vé giữ chỗ nhanh, thanh toán khi lên xe\nĐón trả tận nơi|Xe trung chuyển đưa đón theo địa chỉ của bạn\nGiá luôn tốt nhất|Đúng giá niêm yết, không tăng giá ngày lễ Tết\nTần suất 1 tiếng 1 chuyến|Nhiều chuyến trong ngày từ sáng sớm đến tối\nĐúng giờ đón trả|Cam kết đúng giờ, đúng ghế đã đặt trên vé\nTổng đài hỗ trợ 24/7|Hotline 1900 888 999 luôn sẵn sàng tư vấn"

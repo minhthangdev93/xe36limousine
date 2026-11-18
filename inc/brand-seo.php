@@ -61,21 +61,23 @@ function xe36_normalize_brand_copy( $text ) {
 	);
 
 	$replacements = array(
-		'Xe 36 Travel Limousine' => 'Xe 36 Travel Limousine', // no-op anchor
-		'36 BA SÁU TRAVEL'       => xe36_brand_site_name(),
-		'36 Ba Sáu Travel'       => xe36_brand_site_name(),
-		'Ba Sáu Travel'          => xe36_brand_site_name(),
-		'Ba Sau Travel'          => xe36_brand_site_name(),
-		'Xe 36 Limousine'        => xe36_brand_site_name(),
-		'xe 36 limousine'        => xe36_brand_site_name(),
+		'36 BA SÁU TRAVEL' => xe36_brand_site_name(),
+		'36 Ba Sáu Travel' => xe36_brand_site_name(),
+		'Ba Sáu Travel'    => xe36_brand_site_name(),
+		'Ba Sau Travel'    => xe36_brand_site_name(),
+		'Xe 36 Limousine'  => xe36_brand_site_name(),
 	);
 
 	foreach ( $replacements as $from => $to ) {
-		if ( 'Xe 36 Travel Limousine' === $from ) {
-			continue;
-		}
 		$protected = str_ireplace( $from, $to, $protected );
 	}
+
+	// "36 Limousine" / "xe 36 Limousine" as brand (skip URL/filename hyphens).
+	$protected = preg_replace(
+		'/(?<![\w\-])(?:[Xx]e\s+)?36\s+Limousine\b(?!\s+Travel)/u',
+		xe36_brand_site_name(),
+		$protected
+	);
 
 	// Standalone "36 Travel" (not already part of longer brand / legal token).
 	$protected = preg_replace(
@@ -145,6 +147,32 @@ add_filter( 'rank_math/frontend/title', 'xe36_filter_rank_math_brand_text', 20 )
 add_filter( 'rank_math/frontend/description', 'xe36_filter_rank_math_brand_text', 20 );
 
 /**
+ * Recursively normalize brand strings in schema arrays.
+ *
+ * @param mixed $node Schema node.
+ * @return mixed
+ */
+function xe36_normalize_brand_in_schema( $node ) {
+	if ( is_string( $node ) ) {
+		return xe36_normalize_brand_copy( $node );
+	}
+
+	if ( ! is_array( $node ) ) {
+		return $node;
+	}
+
+	foreach ( $node as $key => $value ) {
+		// Keep alternateName list as configured (may include legacy aliases).
+		if ( 'alternateName' === $key ) {
+			continue;
+		}
+		$node[ $key ] = xe36_normalize_brand_in_schema( $value );
+	}
+
+	return $node;
+}
+
+/**
  * Normalize WebSite / Organization names in Rank Math JSON-LD.
  *
  * @param array $data Schema data.
@@ -156,6 +184,7 @@ function xe36_sync_rank_math_schema_brand( $data ) {
 	}
 
 	$site_name = xe36_brand_site_name();
+	$data      = xe36_normalize_brand_in_schema( $data );
 
 	if ( ! empty( $data['WebSite'] ) && is_array( $data['WebSite'] ) ) {
 		$data['WebSite']['name']          = $site_name;
@@ -175,16 +204,37 @@ function xe36_sync_rank_math_schema_brand( $data ) {
 		}
 
 		$types = array_map( 'strtolower', (array) $entity['@type'] );
-		if ( ! array_intersect( $types, array( 'person' ) ) || empty( $entity['worksFor'] ) ) {
-			continue;
+		if ( array_intersect( $types, array( 'organization', 'localbusiness', 'taxiservice' ) ) ) {
+			$data[ $key ]['name'] = $site_name;
+			if ( isset( $data[ $key ]['alternateName'] ) ) {
+				$data[ $key ]['alternateName'] = xe36_brand_alternate_names();
+			}
 		}
 
-		$data[ $key ]['name'] = $site_name;
+		if ( array_intersect( $types, array( 'person' ) ) ) {
+			$data[ $key ]['name'] = $site_name;
+			if ( ! empty( $data[ $key ]['image']['caption'] ) ) {
+				$data[ $key ]['image']['caption'] = $site_name;
+			}
+		}
 	}
 
 	return $data;
 }
 add_filter( 'rank_math/json_ld', 'xe36_sync_rank_math_schema_brand', 100 );
+
+/**
+ * Normalize brand in post/page body HTML.
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function xe36_filter_the_content_brand( $content ) {
+	return xe36_normalize_brand_copy( $content );
+}
+add_filter( 'the_content', 'xe36_filter_the_content_brand', 20 );
+add_filter( 'widget_text', 'xe36_filter_the_content_brand', 20 );
+add_filter( 'widget_text_content', 'xe36_filter_the_content_brand', 20 );
 
 /**
  * Normalize ACF text fields on output.

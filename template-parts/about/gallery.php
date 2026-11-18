@@ -44,7 +44,7 @@ $slide_count = count( $images );
 						<li class="about-gallery__slide" data-gallery-slide>
 							<img
 								src="<?php echo esc_url( $url ); ?>"
-								alt="<?php echo esc_attr( sprintf( 'Nội thất 36 Limousine %d', $index + 1 ) ); ?>"
+								alt="<?php echo esc_attr( sprintf( 'Nội thất Xe 36 Travel Limousine %d', $index + 1 ) ); ?>"
 								loading="<?php echo 0 === $index ? 'eager' : 'lazy'; ?>"
 								decoding="async"
 								draggable="false"
