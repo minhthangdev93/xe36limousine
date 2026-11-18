@@ -173,6 +173,15 @@ function xe36_acf_register_homepage_fields() {
 						'type'  => 'text',
 					),
 					array(
+						'key'           => 'field_xe36_booking_form_promo_notice',
+						'label'         => 'CTA / thông báo trên form đặt vé',
+						'name'          => 'booking_form_promo_notice',
+						'type'          => 'textarea',
+						'rows'          => 3,
+						'instructions'  => 'Hiện ngay phía trên các ô nhập. Để trống = ẩn.',
+						'default_value' => 'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T2–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).',
+					),
+					array(
 						'key'   => 'field_xe36_booking_label_route',
 						'label' => 'Nhãn — Tuyến',
 						'name'  => 'booking_label_route',

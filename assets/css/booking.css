@@ -34,6 +34,22 @@
 	color: var(--xe36-text);
 }
 
+.xe36-booking-form__promo {
+	margin: 0 0 calc(var(--xe36-space-unit) * 1.75);
+	padding: 0.75rem 0.9rem;
+	border-radius: 12px;
+	background: rgba(255, 149, 0, 0.14);
+	border: 1px solid rgba(255, 149, 0, 0.35);
+	color: #9a4d00;
+	font-size: 0.92rem;
+	font-weight: 600;
+	line-height: 1.45;
+}
+
+.xe36-booking-form__title + .xe36-booking-form__promo {
+	margin-top: calc(var(--xe36-space-unit) * -0.75);
+}
+
 .xe36-booking-form .form-row {
 	display: flex;
 	gap: calc(var(--xe36-space-unit) * 1.5);
@@ -284,6 +300,12 @@
 
 .xe36-surface-dark .xe36-booking-form .xe36-booking-form__hint {
 	color: rgba(60, 60, 67, 0.6);
+}
+
+.xe36-surface-dark .xe36-booking-form .xe36-booking-form__promo {
+	background: rgba(255, 149, 0, 0.16);
+	border-color: rgba(255, 149, 0, 0.4);
+	color: #9a4d00;
 }
 
 @media (max-width: 768px) {

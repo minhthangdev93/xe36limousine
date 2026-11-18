@@ -11,6 +11,12 @@ require_once xe36_theme_path( 'inc/booking/routes.php' );
 require_once xe36_theme_path( 'inc/booking/countries.php' );
 
 $form_title    = xe36_get_homepage_field( 'booking_form_title', 'Đặt vé nhanh' );
+$promo_notice  = trim(
+	(string) xe36_get_homepage_field(
+		'booking_form_promo_notice',
+		'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T2–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).'
+	)
+);
 $label_route   = xe36_get_homepage_field( 'booking_label_route', 'Tuyến' );
 $label_date    = xe36_get_homepage_field( 'booking_label_date', 'Ngày đi' );
 $label_time    = xe36_get_homepage_field( 'booking_label_time', 'Giờ đi' );
@@ -28,6 +34,10 @@ $default_seat  = 'middle';
 <div class="datve xe36-booking-form">
 	<?php if ( $form_title ) : ?>
 		<h2 class="xe36-booking-form__title text-headline-sm"><?php echo esc_html( $form_title ); ?></h2>
+	<?php endif; ?>
+
+	<?php if ( '' !== $promo_notice ) : ?>
+		<p class="xe36-booking-form__promo" role="status"><?php echo esc_html( $promo_notice ); ?></p>
 	<?php endif; ?>
 
 	<form id="booking-form" class="xe36-booking-form__fields" novalidate>
