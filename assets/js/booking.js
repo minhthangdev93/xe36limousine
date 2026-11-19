@@ -199,7 +199,7 @@
 	}
 
 	/**
-	 * Flat promo: Mon–Fri, listed times, from startDate (optional endDate).
+	 * Flat promo: Tue–Fri (T3–T6), listed times, from startDate (optional endDate).
 	 */
 	function isFlatPromo(route, dateStr, timeStr, cfg) {
 		var promo = (cfg && cfg.flatPromo) || null;
@@ -220,8 +220,8 @@
 		if (isNaN(d.getTime())) {
 			return false;
 		}
-		var day = d.getDay(); // 0=Sun … 6=Sat
-		if (day === 0 || day === 6) {
+		var day = d.getDay(); // 0=Sun … 6=Sat; Tue=2 … Fri=5
+		if (day < 2 || day > 5) {
 			return false;
 		}
 		var times = isOutboundRoute(route)

@@ -191,7 +191,7 @@ function xe36_booking_seat_surcharge() {
 }
 
 /**
- * Flat-price promo (đồng giá) config — Mon–Fri, listed departure times, from start date.
+ * Flat-price promo (đồng giá) config — Tue–Fri, listed departure times, from start date.
  *
  * @return array{
  *   enabled:bool,
@@ -302,7 +302,8 @@ function xe36_booking_flat_promo_applies( $route, $date, $time ) {
 	} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 		$dow = 0;
 	}
-	if ( $dow < 1 || $dow > 5 ) {
+	// Tue–Fri only (T3–T6).
+	if ( $dow < 2 || $dow > 5 ) {
 		return false;
 	}
 

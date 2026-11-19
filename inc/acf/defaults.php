@@ -49,7 +49,7 @@ function xe36_acf_defaults() {
 			'booking_flat_promo_end'      => '',
 			'booking_flat_price_th'       => 200000,
 			'booking_flat_price_beach'    => 250000,
-			'booking_form_promo_notice'   => 'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T2–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).',
+			'booking_form_promo_notice'   => 'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T3–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).',
 			'gallery_title'               => 'Nội thất, ngoại thất xe Limousine 11 chỗ',
 			'gallery_images'              => array(),
 			'routes_title'                => 'Lộ trình phổ biến',

@@ -179,7 +179,7 @@ function xe36_acf_register_homepage_fields() {
 						'type'          => 'textarea',
 						'rows'          => 3,
 						'instructions'  => 'Hiện ngay phía trên các ô nhập. Để trống = ẩn.',
-						'default_value' => 'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T2–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).',
+						'default_value' => 'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T3–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).',
 					),
 					array(
 						'key'   => 'field_xe36_booking_label_route',
@@ -289,7 +289,7 @@ function xe36_acf_register_homepage_fields() {
 						'label'   => '',
 						'name'    => '',
 						'type'    => 'message',
-						'message' => '<strong>Chương trình đồng giá</strong> — T2→T6 từ ngày bắt đầu. Giờ áp dụng: HN→TH <code>05:30, 07:00</code>; TH→HN <code>03:30, 04:40, 05:40, 06:40</code>. Ngoài khung / T7–CN = giá thường ở trên. Để trống ngày kết thúc = chưa hết hạn.',
+						'message' => '<strong>Chương trình đồng giá</strong> — T3→T6 từ ngày bắt đầu. Giờ áp dụng: HN→TH <code>05:30, 07:00</code>; TH→HN <code>03:30, 04:40, 05:40, 06:40</code>. Ngoài khung / T2 / T7–CN = giá thường ở trên. Để trống ngày kết thúc = chưa hết hạn.',
 					),
 					array(
 						'key'           => 'field_xe36_booking_flat_promo_enabled',

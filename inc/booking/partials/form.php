@@ -14,7 +14,7 @@ $form_title    = xe36_get_homepage_field( 'booking_form_title', 'Đặt vé nhan
 $promo_notice  = trim(
 	(string) xe36_get_homepage_field(
 		'booking_form_promo_notice',
-		'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T2–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).'
+		'Đồng giá 200K Hà Nội⇌TP Thanh Hóa · 250K Sầm Sơn/Hải Tiến — T3–T6, giờ sớm (05:30–07:00 / chiều về 03:30 đến 06:40).'
 	)
 );
 $label_route   = xe36_get_homepage_field( 'booking_label_route', 'Tuyến' );
